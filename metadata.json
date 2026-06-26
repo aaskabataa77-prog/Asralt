@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Remix: Асралтын Ертөнц",
+  "description": "10 настай Асралтын сонирхолтой ертөнц, хобби, дуртай зүйлсийн хувийн хуудас",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
