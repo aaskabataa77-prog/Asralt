@@ -4,7 +4,7 @@ import {
   Music, Heart, Smile, CheckCircle2, Award, MessageSquare, 
   Send, Sparkles, Star, Sparkle, Zap, Compass, Play, Pause, Volume2, VolumeX,
   User, Calendar, MapPin, Code, BookOpen, Crown, ChevronRight, Check, Skull, Swords, RefreshCw, Eye, EyeOff,
-  Settings, Disc, Upload
+  Settings, Disc, Upload, Bot, X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -84,6 +84,195 @@ export default function App() {
 
   // Background audio / stars ambiance toggle
   const [enableAmbianceParticles, setEnableAmbianceParticles] = useState(true);
+
+  // Gemini AI Chat States & Handlers
+  interface ChatMessage {
+    id: string;
+    role: 'user' | 'model';
+    content: string;
+    timestamp: Date;
+  }
+
+  const [isIdolChatOpen, setIsIdolChatOpen] = useState(false);
+  const [idolMessages, setIdolMessages] = useState<ChatMessage[]>(() => [
+    {
+      id: 'welcome-idol',
+      role: 'model',
+      content: 'За, хийгээд үзье! 🔥 Би Юүжи Итадори байна. Найз минь, чамд ямар зөвлөгөө, дэмжлэг, урам зориг хэрэгтэй байна? Надад хэлээрэй, би үргэлж бэлэн байна! 💪👟',
+      timestamp: new Date()
+    }
+  ]);
+  const [idolInput, setIdolInput] = useState('');
+  const [isIdolTyping, setIsIdolTyping] = useState(false);
+
+  const [isMeChatOpen, setIsMeChatOpen] = useState(false);
+  const [meMessages, setMeMessages] = useState<ChatMessage[]>(() => [
+    {
+      id: 'welcome-me',
+      role: 'model',
+      content: 'Сайн уу! Асралтын портфолио сайтад тавтай морил! 🪐 Би бол Асралтын AI хувилбар байна. Миний сонирхол, төсөл, хичээлийн талаар асуух зүйл байна уу? Сагс тоглох эсвэл гүйх дуртай шүү! 🏀✨',
+      timestamp: new Date()
+    }
+  ]);
+  const [meInput, setMeInput] = useState('');
+  const [isMeTyping, setIsMeTyping] = useState(false);
+
+  const idolEndRef = useRef<HTMLDivElement | null>(null);
+  const meEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (isIdolChatOpen && idolEndRef.current) {
+      idolEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [idolMessages, isIdolChatOpen, isIdolTyping]);
+
+  useEffect(() => {
+    if (isMeChatOpen && meEndRef.current) {
+      meEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [meMessages, isMeChatOpen, isMeTyping]);
+
+  const sendIdolMessage = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!idolInput.trim() || isIdolTyping) return;
+
+    const userMsg: ChatMessage = {
+      id: Math.random().toString(),
+      role: 'user',
+      content: idolInput.trim(),
+      timestamp: new Date()
+    };
+
+    setIdolMessages(prev => [...prev, userMsg]);
+    setIdolInput('');
+    setIsIdolTyping(true);
+    triggerReward(10, "Юүжи Итадоритой холбогдож байна... 📞⚡");
+
+    try {
+      const conversationHistory = [...idolMessages, userMsg].map(m => ({
+        role: m.role,
+        content: m.content
+      }));
+
+      const response = await fetch('/api/chat/idol', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversationHistory })
+      });
+
+      let responseText = 'Уучлаарай, холболтонд алдаа гарлаа. Та дахин оролдоно уу.';
+      if (!response.ok) {
+        try {
+          const errData = await response.json();
+          if (errData && errData.text) {
+            responseText = errData.text;
+          } else if (errData && errData.error) {
+            if (errData.error === "GEMINI_API_KEY_MISSING") {
+              responseText = "Системийн алдаа: Gemini API Түлхүүр (GEMINI_API_KEY) тохируулагдаагүй байна. Та өөрийн Portfolio сайтын Settings > Secrets цэс рүү орж GEMINI_API_KEY нэртэйгээр өөрийн API түлхүүрийг нэмнэ үү. Ингэснээр AI чат ажиллах болно! 🛠️";
+            } else {
+              responseText = `Алдаа: ${errData.error}`;
+            }
+          }
+        } catch (e) {
+          // Response is not JSON
+        }
+        throw new Error(responseText);
+      }
+
+      const data = await response.json();
+      const modelMsg: ChatMessage = {
+        id: Math.random().toString(),
+        role: 'model',
+        content: data.text || 'Уучлаарай, хариу олдсонгүй.',
+        timestamp: new Date()
+      };
+
+      setIdolMessages(prev => [...prev, modelMsg]);
+      triggerReward(15, "Юүжи Итадори хариуллаа! 👊🔥");
+    } catch (err: any) {
+      console.error(err);
+      const errorMsg: ChatMessage = {
+        id: Math.random().toString(),
+        role: 'model',
+        content: err.message || 'Уучлаарай, холболтонд алдаа гарлаа. Та дахин оролдоно уу.',
+        timestamp: new Date()
+      };
+      setIdolMessages(prev => [...prev, errorMsg]);
+    } finally {
+      setIsIdolTyping(false);
+    }
+  };
+
+  const sendMeMessage = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!meInput.trim() || isMeTyping) return;
+
+    const userMsg: ChatMessage = {
+      id: Math.random().toString(),
+      role: 'user',
+      content: meInput.trim(),
+      timestamp: new Date()
+    };
+
+    setMeMessages(prev => [...prev, userMsg]);
+    setMeInput('');
+    setIsMeTyping(true);
+    triggerReward(10, "Асралтын AI-тай холбогдож байна... 🏀⚡");
+
+    try {
+      const conversationHistory = [...meMessages, userMsg].map(m => ({
+        role: m.role,
+        content: m.content
+      }));
+
+      const response = await fetch('/api/chat/me', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversationHistory })
+      });
+
+      let responseText = 'Уучлаарай, холболтонд алдаа гарлаа. Та дахин оролдоно уу.';
+      if (!response.ok) {
+        try {
+          const errData = await response.json();
+          if (errData && errData.text) {
+            responseText = errData.text;
+          } else if (errData && errData.error) {
+            if (errData.error === "GEMINI_API_KEY_MISSING") {
+              responseText = "Системийн алдаа: Gemini API Түлхүүр (GEMINI_API_KEY) тохируулагдаагүй байна. Та өөрийн Portfolio сайтын Settings > Secrets цэс рүү орж GEMINI_API_KEY нэртэйгээр өөрийн API түлхүүрийг нэмнэ үү. Ингэснээр AI чат ажиллах болно! 🛠️";
+            } else {
+              responseText = `Алдаа: ${errData.error}`;
+            }
+          }
+        } catch (e) {
+          // Response is not JSON
+        }
+        throw new Error(responseText);
+      }
+
+      const data = await response.json();
+      const modelMsg: ChatMessage = {
+        id: Math.random().toString(),
+        role: 'model',
+        content: data.text || 'Уучлаарай, хариу олдсонгүй.',
+        timestamp: new Date()
+      };
+
+      setMeMessages(prev => [...prev, modelMsg]);
+      triggerReward(15, "Асралт хариуллаа! 🏀✨");
+    } catch (err: any) {
+      console.error(err);
+      const errorMsg: ChatMessage = {
+        id: Math.random().toString(),
+        role: 'model',
+        content: err.message || 'Уучлаарай, холболтонд алдаа гарлаа. Та дахин оролдоно уу.',
+        timestamp: new Date()
+      };
+      setMeMessages(prev => [...prev, errorMsg]);
+    } finally {
+      setIsMeTyping(false);
+    }
+  };
 
   // Scroll tracking for high-performance parallax scroll offsets
   useEffect(() => {
@@ -495,6 +684,18 @@ export default function App() {
               <Gamepad2 className="w-3.5 h-3.5 text-indigo-400" />
               <span>Тоглоом Тоглох 🎮</span>
             </a>
+
+            {/* My Idol Chat button */}
+            <button
+              onClick={() => {
+                setIsIdolChatOpen(true);
+                triggerReward(15, "🤖 Idol Coach (Yuji Itadori) чат нээгдлээ!");
+              }}
+              className="flex items-center gap-1.5 bg-gradient-to-r from-amber-500/20 to-rose-500/20 hover:from-amber-500/30 hover:to-rose-500/30 border border-amber-500/30 hover:border-rose-500/50 text-amber-200 hover:text-white font-bold text-xs px-4 py-2.5 rounded-2xl transition-all cursor-pointer select-none"
+            >
+              <Bot className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+              <span>My Idol 🤖</span>
+            </button>
 
             {/* Background ambiance toggle handler */}
             <button
@@ -1411,7 +1612,239 @@ export default function App() {
         </div>
       </footer>
 
+      {/* 🤖 MY IDOL (YUJI ITADORI) OVERLAY MODAL */}
+      <AnimatePresence>
+        {isIdolChatOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-[#060412]/85 backdrop-blur-md z-50 flex items-center justify-center p-4"
+          >
+            <motion.div 
+              initial={{ scale: 0.92, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.92, y: 15 }}
+              className="bg-[#0c0a21]/95 border border-amber-500/30 rounded-3xl w-full max-w-lg h-[550px] flex flex-col overflow-hidden shadow-[0_0_40px_rgba(245,158,11,0.2)] relative"
+            >
+              {/* Outer decorative neon glows */}
+              <div className="absolute top-0 left-0 w-36 h-36 bg-gradient-to-tr from-amber-500/10 to-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
+              
+              {/* Modal Header */}
+              <div className="bg-[#0e0b28] border-b border-white/5 p-4 flex items-center justify-between relative z-10">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-rose-500 p-[1.5px] flex-shrink-0 shadow-lg">
+                    <div className="w-full h-full rounded-2xl bg-[#0c0a21] flex items-center justify-center text-xl">
+                      👊
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black text-white flex items-center gap-1.5 uppercase tracking-wider">
+                      Idol Coach (Yuji Itadori) 🤖
+                    </h3>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                      <span className="text-[10px] text-amber-400 font-extrabold tracking-wide uppercase">
+                        JJK-ийн гол дүр • Халуун сэтгэлт дасгалжуулагч
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <button 
+                  onClick={() => setIsIdolChatOpen(false)}
+                  className="text-slate-450 hover:text-white p-2 rounded-xl hover:bg-white/5 transition-all cursor-pointer"
+                  title="Хаах"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
 
+              {/* Chat Message Window */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 flex flex-col relative z-10 custom-scrollbar bg-[#09071c]/30">
+                {idolMessages.map((msg) => (
+                  <div 
+                    key={msg.id}
+                    className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
+                  >
+                    <div 
+                      className={`max-w-[85%] text-xs px-4 py-3 rounded-2.5xl leading-relaxed shadow-lg font-sans border ${
+                        msg.role === 'user' 
+                          ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white rounded-tr-none border-indigo-500/30' 
+                          : 'bg-white/5 text-slate-100 rounded-tl-none border-amber-500/10'
+                      }`}
+                    >
+                      {msg.content}
+                    </div>
+                    <span className="text-[8px] text-slate-500 mt-1 px-1 select-none">
+                      {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                ))}
+                
+                {isIdolTyping && (
+                  <div className="flex flex-col items-start">
+                    <div className="bg-white/5 text-slate-300 text-xs px-4 py-3 rounded-2.5xl rounded-tl-none border border-amber-500/10 flex items-center gap-2 shadow-md">
+                      <span className="text-[10px] font-bold text-amber-400 flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-bounce"></span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-bounce [animation-delay:0.2s]"></span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-bounce [animation-delay:0.4s]"></span>
+                      </span>
+                      <span className="text-[10px] text-slate-450 font-bold uppercase tracking-wider">Юүжи хариулт бичиж байна...</span>
+                    </div>
+                  </div>
+                )}
+                
+                <div ref={idolEndRef} />
+              </div>
+
+              {/* Chat Input Field Form */}
+              <form 
+                onSubmit={sendIdolMessage} 
+                className="p-3 bg-[#08061a] border-t border-white/5 flex gap-2 items-center relative z-10"
+              >
+                <input 
+                  type="text"
+                  value={idolInput}
+                  onChange={(e) => setIdolInput(e.target.value)}
+                  placeholder="Юүжид хэлэх урамтай үгс эсвэл асуулт..." 
+                  className="flex-1 bg-white/5 hover:bg-white/10 focus:bg-white/10 px-4 py-3 rounded-2xl border border-white/10 focus:border-amber-400 focus:outline-none text-xs font-bold text-white placeholder-slate-500 transition-all"
+                />
+                <button 
+                  type="submit"
+                  disabled={!idolInput.trim() || isIdolTyping}
+                  className="p-3 rounded-2xl bg-gradient-to-r from-amber-500 to-rose-500 hover:brightness-115 text-white transition-all transform active:scale-95 disabled:opacity-30 disabled:scale-100 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center shadow-lg"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 💬 ME-AI ASSISTANT (ASRALT) POPUP CHAT & FLOATING BUTTON */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        
+        {/* Floating Messenger-style toggle launcher button */}
+        {!isMeChatOpen && (
+          <button
+            onClick={() => {
+              setIsMeChatOpen(true);
+              triggerReward(15, "🏀 Асралтын AI туслах чат нээгдлээ!");
+            }}
+            className="bg-gradient-to-tr from-indigo-500 via-purple-500 to-rose-500 hover:brightness-110 p-4 rounded-full shadow-[0_5px_25px_rgba(99,102,241,0.55)] hover:shadow-[0_8px_30px_rgba(99,102,241,0.7)] transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer flex items-center justify-center text-white border border-white/20 select-none animate-bounce relative group"
+            title="Асралт AI Туслах"
+          >
+            {/* Pulsing indicator dot */}
+            <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#070514] rounded-full"></span>
+            <MessageSquare className="w-5.5 h-5.5 text-white animate-pulse" />
+            
+            {/* Tooltip */}
+            <span className="absolute right-14 bg-[#0a071d] border border-indigo-500/20 px-2.5 py-1.5 rounded-xl text-[9px] font-black uppercase text-indigo-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl">
+              Асралт AI туслах 🏀✨
+            </span>
+          </button>
+        )}
+
+        {/* Messenger Chat Box Panel */}
+        <AnimatePresence>
+          {isMeChatOpen && (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 30 }}
+              className="bg-[#0c0921]/95 border border-indigo-500/30 backdrop-blur-2xl rounded-3xl shadow-[0_15px_50px_rgba(0,0,0,0.6)] w-80 sm:w-96 h-[480px] flex flex-col overflow-hidden relative"
+            >
+              <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-indigo-500/10 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+
+              {/* Chat Header */}
+              <div className="bg-gradient-to-r from-indigo-900/40 via-purple-900/40 to-[#0e0b28] p-3 border-b border-white/5 flex items-center justify-between relative z-10">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-lg shadow-inner">
+                    🏀
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-black text-white flex items-center gap-1 uppercase tracking-wider">
+                      Асралт (AI Туслах) 🟢
+                    </h4>
+                    <span className="text-[9px] text-indigo-300 font-bold tracking-wide uppercase">
+                      Ирээдүйн инженер, сагсчин
+                    </span>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => setIsMeChatOpen(false)}
+                  className="text-slate-450 hover:text-white p-1.5 rounded-lg hover:bg-white/5 transition-all cursor-pointer"
+                  title="Хаах"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Chat messages container */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-3.5 flex flex-col relative z-10 custom-scrollbar bg-slate-950/20">
+                {meMessages.map((msg) => (
+                  <div 
+                    key={msg.id}
+                    className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
+                  >
+                    <div 
+                      className={`max-w-[85%] text-[11px] px-3.5 py-2.5 rounded-2.5xl leading-relaxed shadow-lg font-sans border ${
+                        msg.role === 'user' 
+                          ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white rounded-tr-none border-indigo-500/30' 
+                          : 'bg-white/5 text-slate-100 rounded-tl-none border-indigo-500/10'
+                      }`}
+                    >
+                      {msg.content}
+                    </div>
+                    <span className="text-[7.5px] text-slate-500 mt-1 px-1 select-none">
+                      {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                ))}
+
+                {isMeTyping && (
+                  <div className="flex flex-col items-start">
+                    <div className="bg-white/5 text-slate-300 text-[10px] px-3.5 py-2.5 rounded-2.5xl rounded-tl-none border border-indigo-500/10 flex items-center gap-1.5 shadow-md">
+                      <span className="text-[10px] font-bold text-indigo-400 flex items-center gap-1">
+                        <span className="w-1.2 h-1.2 rounded-full bg-indigo-400 animate-bounce"></span>
+                        <span className="w-1.2 h-1.2 rounded-full bg-indigo-400 animate-bounce [animation-delay:0.2s]"></span>
+                        <span className="w-1.2 h-1.2 rounded-full bg-indigo-400 animate-bounce [animation-delay:0.4s]"></span>
+                      </span>
+                      <span className="text-[9px] text-slate-450 font-bold uppercase tracking-wider">Асралт хариулж байна...</span>
+                    </div>
+                  </div>
+                )}
+
+                <div ref={meEndRef} />
+              </div>
+
+              {/* Chat Input Field Form */}
+              <form 
+                onSubmit={sendMeMessage} 
+                className="p-2.5 bg-[#08061a] border-t border-white/5 flex gap-2 items-center relative z-10"
+              >
+                <input 
+                  type="text"
+                  value={meInput}
+                  onChange={(e) => setMeInput(e.target.value)}
+                  placeholder="Асралтаас асуух зүйлээ бичээрэй..." 
+                  className="flex-1 bg-white/5 hover:bg-white/10 focus:bg-white/10 px-3.5 py-2.5 rounded-xl border border-white/10 focus:border-indigo-400 focus:outline-none text-[11px] font-bold text-white placeholder-slate-500 transition-all"
+                />
+                <button 
+                  type="submit"
+                  disabled={!meInput.trim() || isMeTyping}
+                  className="p-2.5 rounded-xl bg-indigo-650 hover:bg-indigo-600 text-white transition-all transform active:scale-95 disabled:opacity-30 disabled:scale-100 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center shadow-lg"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                </button>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
     </div>
   );
