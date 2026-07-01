@@ -490,6 +490,21 @@ export default function ReflexClicker({ onGainXp }: ReflexClickerProps) {
     }
   };
 
+  // Trigger game over safe checks
+  useEffect(() => {
+    if (!playing || gameOver) return;
+    if (mode === 'speed_grid' && timeLeft <= 0) {
+      triggerGameOver();
+    }
+  }, [timeLeft, playing, gameOver, mode]);
+
+  useEffect(() => {
+    if (!playing || gameOver) return;
+    if (lives <= 0) {
+      triggerGameOver();
+    }
+  }, [lives, playing, gameOver]);
+
   // Blitz or Survival countdown core timer
   useEffect(() => {
     if (!playing || gameOver) return;
@@ -503,7 +518,6 @@ export default function ReflexClicker({ onGainXp }: ReflexClickerProps) {
           }
           if (next <= 0) {
             clearInterval(timer);
-            triggerGameOver();
             return 0;
           }
           return next;
@@ -790,13 +804,7 @@ export default function ReflexClicker({ onGainXp }: ReflexClickerProps) {
 
       // Survival mode life losing penalty
       if (mode === 'survival_flick') {
-        setLives(l => {
-          const nextL = l - 1;
-          if (nextL <= 0) {
-            triggerGameOver();
-          }
-          return nextL;
-        });
+        setLives(l => Math.max(0, l - 1));
         stateRef.current.lives--;
       }
     }
@@ -900,11 +908,7 @@ export default function ReflexClicker({ onGainXp }: ReflexClickerProps) {
             s.combo = 0;
 
             if (mode === 'survival_flick') {
-              setLives(l => {
-                const nl = l - 1;
-                if (nl <= 0) triggerGameOver();
-                return nl;
-              });
+              setLives(l => Math.max(0, l - 1));
               s.lives--;
             }
 

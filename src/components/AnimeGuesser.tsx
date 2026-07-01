@@ -648,12 +648,29 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
             </div>
 
             {/* EMOJI MAIN BOX OR CHARACTER IMAGE DISPLAY */}
-            <div className={`relative py-6 px-4 border rounded-3xl text-center shadow-xl flex flex-col items-center justify-center space-y-3 transition-all duration-300 ${
+            <div className={`relative py-6 px-4 border rounded-3xl text-center shadow-xl flex flex-col items-center justify-center space-y-3 overflow-hidden transition-all duration-300 ${
               isFeverMode 
                 ? 'bg-gradient-to-b from-[#240a0a]/70 to-[#120303]/90 border-red-500/30 shadow-[0_0_30px_rgba(239,68,68,0.2)]' 
                 : 'bg-gradient-to-b from-[#110d2b]/60 to-[#080617]/90 border-white/5 shadow-stone-950/50'
             }`}>
-              <div className="absolute top-2.5 left-3 text-[9px] uppercase font-extrabold text-indigo-400 tracking-wider flex items-center gap-1">
+              {/* Background blurred image preview */}
+              {currentQuestion && (currentQuestion.image || currentQuestion.character_image) && (
+                <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl pointer-events-none">
+                  <img 
+                    src={currentQuestion.image || currentQuestion.character_image} 
+                    alt="Background preview" 
+                    className={`w-full h-full object-cover transition-all duration-700 ${
+                      hasAnswered 
+                        ? 'opacity-30 blur-[2px] scale-110' 
+                        : 'opacity-[0.07] blur-[10px] scale-100'
+                    }`}
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-slate-950/30 via-slate-950/70 to-[#080617]/95"></div>
+                </div>
+              )}
+
+              <div className="absolute top-2.5 left-3 text-[9px] uppercase font-extrabold text-indigo-400 tracking-wider flex items-center gap-1 z-10">
                 <HelpCircle className="w-3 h-3" /> {quizMode === 'anime' ? "Эможиг таа" : "Баатрыг таа"}
               </div>
 
@@ -661,12 +678,16 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="relative w-40 h-40 md:w-44 md:h-44 rounded-2xl overflow-hidden border border-white/10 shadow-lg"
+                  className="relative w-40 h-40 md:w-44 md:h-44 rounded-2xl overflow-hidden border border-white/10 shadow-lg z-10"
                 >
                   <img 
                     src={currentQuestion.character_image} 
                     alt="Аниме Баатар" 
-                    className="w-full h-full object-cover"
+                    className={`w-full h-full object-cover transition-all duration-700 ${
+                      hasAnswered 
+                        ? 'blur-none opacity-100 scale-105' 
+                        : 'blur-md opacity-35 scale-100'
+                    }`}
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent"></div>
@@ -677,7 +698,7 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring', stiffness: 100 }}
-                className={`text-4xl md:text-5xl tracking-wider select-none py-1 filter ${
+                className={`text-4xl md:text-5xl tracking-wider select-none py-1 filter z-10 ${
                   isFeverMode 
                     ? 'drop-shadow-[0_8px_20px_rgba(239,68,68,0.45)]' 
                     : 'drop-shadow-[0_8px_16px_rgba(99,102,241,0.25)]'
@@ -685,7 +706,7 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
               >
                 {currentQuestion.emojis}
               </motion.div>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-slate-400 z-10">
                 {quizMode === 'anime' 
                   ? "Дээрх эможинууд ямар анимэг илтгэж байна вэ?" 
                   : "Зураг болон эможиг ашиглан баатрын нэрийг таана уу!"
@@ -697,7 +718,7 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="mt-2 text-xs bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 px-3 py-1 rounded-lg font-mono font-black"
+                  className="mt-2 text-xs bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 px-3 py-1 rounded-lg font-mono font-black z-10"
                 >
                   Нэрний эхний үсэг: "{currentQuestion.answer.charAt(0)}" ...
                 </motion.div>
@@ -708,7 +729,7 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-2 px-4 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-xl max-w-sm text-left"
+                  className="mt-2 px-4 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-xl max-w-sm text-left z-10"
                 >
                   <p className="text-[10px] uppercase font-black text-amber-400">Зөвлөмж:</p>
                   <p className="text-[11px] text-amber-200 font-medium leading-relaxed">{currentQuestion.hint}</p>
