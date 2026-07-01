@@ -1,0 +1,336 @@
+{
+  "anime": [
+    {
+      "id": 1,
+      "emojis": "🏴‍☠️🍖👒",
+      "answer": "One Piece",
+      "options": ["One Piece", "Naruto", "Bleach", "Dragon Ball"],
+      "answers": ["one piece", "onepiece", "op", "luffy", "ван пис", "луффи", "ванпис"],
+      "image": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/S8_YwFLCh4U",
+      "hint": "Энэ анимэ-ийн гол дүр резинэн биетэй бөгөөд Хөвгүүдийн Хаан болохыг мөрөөддөг.",
+      "trivia": "One Piece бол дэлхийн түүхэнд хамгийн олон хувь борлогдсон манга бөгөөд 500 сая гаруй хувь борлогдож Гиннесийн дээд амжилтыг тогтоосон!"
+    },
+    {
+      "id": 2,
+      "emojis": "🦊🌀🍜🍥",
+      "answer": "Naruto",
+      "options": ["Naruto", "Boruto", "My Hero Academia", "Demon Slayer"],
+      "answers": ["naruto", "naruto shippuden", "наруто", "uzumaki", "узумаки", "шиппүдэн"],
+      "image": "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/2u3X9G8r3no",
+      "hint": "Дотор нь есөн сүүлт үнэгэн чөтгөр тамгалагдсан, Рамэнд нугасгүй шар үстэй нинжа хүү.",
+      "trivia": "Нарутогийн дуртай рамэн ресторан 'Ичираку Рамэн' нь зохиолч Масаши Кишимотогийн оюутан байхдаа байнга очдог байсан бодит ресторан дээр суурилсан байдаг!"
+    },
+    {
+      "id": 3,
+      "emojis": "⚔️👺🌊🐗",
+      "answer": "Demon Slayer",
+      "options": ["Demon Slayer", "Jujutsu Kaisen", "Attack on Titan", "Inuyasha"],
+      "answers": ["demon slayer", "kimetsu no yaiba", "kny", "demonslayer", "tanjiro", "демон слэйер", "квицу но яиба", "чөтгөрийн ангууч"],
+      "image": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/2e_TnyE0S_E",
+      "hint": "Танжиро хүү хайртай дүүгээ чөтгөрөөс буцааж хүн болгохын тулд онцгой сэлэм эзэмшинэ.",
+      "trivia": "Mugen Train кино нь Японы бүх цаг үеийн хамгийн өндөр орлоготой кино болж, алдарт Спиритэд Эвэй (Spirited Away) киноны 19 жилийн дээд амжилтыг эвдсэн юм!"
+    },
+    {
+      "id": 4,
+      "emojis": "🧱💥👣🛡️",
+      "answer": "Attack on Titan",
+      "options": ["Attack on Titan", "Neon Genesis Evangelion", "Death Note", "Fullmetal Alchemist"],
+      "answers": ["attack on titan", "aot", "shingeki no kyojin", "snk", "титан", "эрен", "attackontitan", "титануудын дайралт"],
+      "image": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/8OkpRKvshSg",
+      "hint": "Хүн төрөлхтөн аварга биетүүдээс хамгаалж 3 давхар аварга том хананы ард амьдардаг.",
+      "trivia": "Энэ анимэ-ийн аварга титануудын хөдөлгөөнүүдийг зохиолч Хажимэ Исаяма холимог тулааны тамирчдын (MMA) тулааны техникээс санаа авч зурсан байна."
+    },
+    {
+      "id": 5,
+      "emojis": "📓🍎🍎✍️",
+      "answer": "Death Note",
+      "options": ["Death Note", "Code Geass", "Steins;Gate", "Monster"],
+      "answers": ["death note", "deathnote", "l", "light yagami", "дэт ноут", "үхлийн тэмдэглэл"],
+      "image": "https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/8QE9cmfxx4s",
+      "hint": "Нэрийг нь бичсэн хүн үхдэг ер бусын дэвтэр олсон гоц ухаант сурагч болон L-ийн оюун ухааны тулаан.",
+      "trivia": "Мөрдөгч L-ийг анх зохиогчид нь хэтэрхий царайлаг биш, харин маш хачин зуршилтай (суух хэлбэр, чихэр идэх г.м) өвөрмөц дүр болгож бүтээсэн байна."
+    },
+    {
+      "id": 6,
+      "emojis": "🐉⭐🟠🥋",
+      "answer": "Dragon Ball",
+      "options": ["Dragon Ball", "Hunter x Hunter", "Yu Yu Hakusho", "One Punch Man"],
+      "answers": ["dragon ball", "dragonball", "dbz", "goku", "драгонбол", "драгон бол", "гоку", "лууны сувд"],
+      "image": "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/GHnfX19Z1_U",
+      "hint": "7 ширхэг шидэт бөмбөлгийг цуглуулж хүслээ биелүүлдэг, сайн төрлийн саяа уралдааны дайчин эр Сон Гоку.",
+      "trivia": "Гокугийн 'Камэхамэха' довтолгооны нэр нь Хавайн арал дээрх алдартай хааны нэрнээс гаралтай!"
+    },
+    {
+      "id": 7,
+      "emojis": "👁️🤞👹🔴",
+      "answer": "Jujutsu Kaisen",
+      "options": ["Jujutsu Kaisen", "Chainsaw Man", "Bleach", "Tokyo Ghoul"],
+      "answers": ["jujutsu kaisen", "jjk", "yuji", "gojo", "жужуцу кайсен", "жижүцү", "жужуцү"],
+      "image": "https://images.unsplash.com/photo-1563089145-599997674d42?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/v8b3YrokKxg",
+      "hint": "Чөтгөрийн хаан Сукунагийн хурууг залгиж, хараалын хүчийг ашиглан тэмцэх сурагч хүү Итадори.",
+      "trivia": "Гүжү Гожогийн нүдний боолт нь түүний 'Хязгааргүй Зургаан Нүд' мэдрэхүйг хэт ачаалахаас сэргийлж, тархийг нь амраадаг зориулалттай!"
+    },
+    {
+      "id": 8,
+      "emojis": "🥦🦸💥🏫",
+      "answer": "My Hero Academia",
+      "options": ["My Hero Academia", "Black Clover", "Fire Force", "Soul Eater"],
+      "answers": ["my hero academia", "mha", "boku no hero academia", "bnha", "миний баатарлаг академи", "деку", "deku"],
+      "image": "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/wIb3nnOeWZo",
+      "hint": "Хүн бүр ер бусын хүчтэй (Quirk) төрдөг ертөнцөд хүчгүй төрсөн ч хамгийн агуу баатар болохыг зорьж буй Деку.",
+      "trivia": "Декугийн баатарлаг нэр 'Deku' нь япон хэлний 'Дэкиру' буюу 'Би чадна!' гэдэг үгтэй төстэй сонсогдохоор өөрчлөгдсөн бөгөөд урьд нь 'хэрэгцээгүй хүн' гэсэн доромж үг байжээ."
+    },
+    {
+      "id": 9,
+      "emojis": "🪚🐶🩸😈",
+      "answer": "Chainsaw Man",
+      "options": ["Chainsaw Man", "Devilman Crybaby", "Hellsing", "D.Gray-man"],
+      "answers": ["chainsaw man", "chainsawman", "denji", "pochita", "хөрөөт хүн", "хөрөөт", "чэйнсоу мэн"],
+      "image": "https://images.unsplash.com/photo-1613376023733-0a73315d9b06?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/dFlDRhvM4L0",
+      "hint": "Почита хэмээх хөрөөт чөтгөр нохойтой нэгдэж, цээжнээсээ хөрөө гаргаж тулалддаг Дэньжи хүү.",
+      "trivia": "Зохиолч Тацүки Фүжимото энэ бүтээлийнхээ ихэнх хэсгийг Өмнөд Солонгосын аймшгийн болон Америкийн блокбастер кинонуудаас санаа авч бүтээсэн тул олон кино уран бүтээлийн 'easter egg' орсон байдаг."
+    },
+    {
+      "id": 10,
+      "emojis": "🎣🟢🕷️👑",
+      "answer": "Hunter x Hunter",
+      "options": ["Hunter x Hunter", "Yu Yu Hakusho", "Fairy Tail", "Sword Art Online"],
+      "answers": ["hunter x hunter", "hxh", "gon", "killua", "хантер хантер", "ангууч", "хантер"],
+      "image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/faqmNMCK29s",
+      "hint": "Гон хүү аавыгаа олохын тулд Ангуучийн (Hunter) шалтанд орж, Нэн хүчийг суралцаж, маш олон аюулыг туулдаг.",
+      "trivia": "Зохиолч Ёшихиро Тогаши нь алдарт Сейлор Мүүнийг (Sailor Moon) бүтээгч Наоко Такэүчитэй гэрлэсэн бөгөөд тэд бие биенийхээ манга дээр тусалж байсан!"
+    },
+    {
+      "id": 11,
+      "emojis": "🦾⚡🩸👦",
+      "answer": "Fullmetal Alchemist",
+      "options": ["Fullmetal Alchemist", "Fairy Tail", "Blue Exorcist", "D.Gray-man"],
+      "answers": ["fullmetal alchemist", "fma", "fmab", "edward elric", "металл алхимич", "ган алхимич", "фуллметал"],
+      "image": "https://images.unsplash.com/photo-1614036417651-efe5912149d8?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/X59yPeVk_70",
+      "hint": "Нас барсан ээжийгээ амь оруулах гээд өөрийн биеийн хэсэг болон дүүгийнхээ биеийг алдсан ах дүү алхимичид.",
+      "trivia": "Fullmetal Alchemist: Brotherhood нь олон жилийн турш анимэ үнэлгээний MyAnimeList сайт дээр тасралтгүй №1 байр суурийг эзэлж ирсэн хамгийн төгс зохиолтой бүтээлүүдийн нэг юм!"
+    },
+    {
+      "id": 12,
+      "emojis": "☕👁️🎭🩸",
+      "answer": "Tokyo Ghoul",
+      "options": ["Tokyo Ghoul", "Parasyte", "Another", "Deadman Wonderland"],
+      "answers": ["tokyo ghoul", "kaneki", "токио гүүл", "токио гхүүл", "гүүл", "канеки"],
+      "image": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/7aMOurgDB-o",
+      "hint": "Хүний махаар хооллодог 'гүүл' хэмээх амьтны эрхтэн шилжүүлэн суулгуулж, хагас гүүл болсон Канеки хүү.",
+      "trivia": "Канекигийн цагаан үс болон хумсаа дуугаргадаг зуршил нь маш их хэмжээний сэтгэл зүйн дарамт, тарчлаан зоволтоос үүдэлтэй Сэргэлийн синдром (Marie Antoinette syndrome) юм."
+    },
+    {
+      "id": 13,
+      "emojis": "⚔️💻👾🏰",
+      "answer": "Sword Art Online",
+      "options": ["Sword Art Online", "Log Horizon", "Overlord", "No Game No Life"],
+      "answers": ["sword art online", "sao", "kirito", "сорд арт онлайн", "сэргээн засах сорд", "хөлөг баатрууд"],
+      "image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/K8YI1F6_Fp4",
+      "hint": "Виртуал тоглоомын ертөнцөд гацаж, тэндээс амьд гарахын тулд 100 давхар цайзыг давах ёстой хар хувцаст Киришима/Кирито.",
+      "trivia": "SAO нь орчин үеийн Исекай (өөр ертөнцөд очих) төрлийн анимэ-г асар хүчтэй дэлгэрүүлж, олон зуун ижил төстэй бүтээл гарах үндсийг тавьсан билээ."
+    },
+    {
+      "id": 14,
+      "emojis": "💀🟠⚔️👘",
+      "answer": "Bleach",
+      "options": ["Bleach", "Naruto", "One Piece", "Soul Eater"],
+      "answers": ["bleach", "ichigo", "блич", "куросаки", "ичиго"],
+      "image": "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/o3p7p_OPh38",
+      "hint": "Сүнсний залуу элч Рукиагийн хүчийг авч, сүнснүүдийг чөлөөлдөг улбар шар үстэй Ичиго.",
+      "trivia": "Зохиолч Тите Кубо энэхүү цувралаа анх 'Snipe' гэж нэрлэх гэж байсан бөгөөд баатрууд нь сэлмийн оронд буу ашигладаг байхаар төлөвлөж байжээ!"
+    },
+    {
+      "id": 15,
+      "emojis": "🌙😺👧💖",
+      "answer": "Sailor Moon",
+      "options": ["Sailor Moon", "Cardcaptor Sakura", "Madoka Magica", "Precure"],
+      "answers": ["sailor moon", "sailormoon", "сейлор мүүн", "сейлор мун", "сарны охин"],
+      "image": "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=80",
+      "video": "https://www.youtube.com/embed/2u3X9G8r3no",
+      "hint": "Луна хэмээх ярьдаг хар мууртай учирч, Сарны хүчээр хувирч хорон муутай тэмцэх Усаги охин.",
+      "trivia": "Сейлор Мүүн нь эмэгтэй супер баатруудын хэв маягийг бүрэн өөрчилж, дэлхий даяар асар том соёлын давалгаа үүсгэсэн хамгийн анхны Махо Шожо (шидэт охин) анимэ юм."
+    }
+  ],
+  "characters": [
+    {
+      "id": 1,
+      "character_image": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&auto=format&fit=crop&q=80",
+      "emojis": "👒🍖🏴‍☠️",
+      "answer": "Monkey D. Luffy",
+      "options": ["Monkey D. Luffy", "Roronoa Zoro", "Portgas D. Ace", "Shanks"],
+      "answers": ["luffy", "monkey d luffy", "monkey d. luffy", "луффи", "луфи", "мөнки д луффи"],
+      "video": "https://www.youtube.com/embed/S8_YwFLCh4U",
+      "hint": "One Piece цувралын гол дүр бөгөөд Резин резин жимс идсэн, Хөвгүүдийн Хаан болох мөрөөдөлтэй залуу.",
+      "trivia": "Луффигийн нэр англи хэлний 'Luff' (завины далбааг салхины чиглэлд тааруулах) гэдэг далайн нэр томьёоноос сэдэвлэгдсэн байж магадгүй гэж үздэг."
+    },
+    {
+      "id": 2,
+      "character_image": "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
+      "emojis": "🦊🍥🌀🍜",
+      "answer": "Naruto Uzumaki",
+      "options": ["Sasuke Uchiha", "Naruto Uzumaki", "Kakashi Hatake", "Boruto Uzumaki"],
+      "answers": ["naruto", "naruto uzumaki", "наруто", "узумаки наруто", "наруто узумаки"],
+      "video": "https://www.youtube.com/embed/2u3X9G8r3no",
+      "hint": "Коноха тосгоны 7-р Хокагэ, Навчин дундаас ургасан хамгийн хүчирхэг нинжа.",
+      "trivia": "Нарутогийн дуртай хоол болох 'Рамэн' дотор байдаг спираль хээтэй цагаан загасан боовыг 'Нарутомаки' гэж нэрлэдэг бөгөөд түүний нэр үүнээс гаралтай!"
+    },
+    {
+      "id": 3,
+      "character_image": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=600&auto=format&fit=crop&q=80",
+      "emojis": "🐗⚔️⚡👺",
+      "answer": "Tanjiro Kamado",
+      "options": ["Tanjiro Kamado", "Zenitsu Agatsuma", "Inosuke Hashibira", "Giyu Tomioka"],
+      "answers": ["tanjiro", "tanjiro kamado", "танжиро", "камадо танжиро"],
+      "video": "https://www.youtube.com/embed/2e_TnyE0S_E",
+      "hint": "Demon Slayer-ийн гол дүр, духан дээрээ сорвитой, усан ба нарны амьсгалаар тулалддаг нинжин сэтгэлт залуу.",
+      "trivia": "Танжирогийн чихэндээ зүүдэг Hanafuda ээмэг нь 'Мандах Нар'-ыг бэлгэддэг бөгөөд энэ нь Нарны Амьсгал эзэмшигчдийн уламжлалт тэмдэг юм."
+    },
+    {
+      "id": 4,
+      "character_image": "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=600&auto=format&fit=crop&q=80",
+      "emojis": "🐉🥋⭐🟠",
+      "answer": "Goku",
+      "options": ["Vegeta", "Gohan", "Goku", "Trunks"],
+      "answers": ["goku", "son goku", "гоку", "сон гоку", "какарот", "kakarot"],
+      "video": "https://www.youtube.com/embed/GHnfX19Z1_U",
+      "hint": "Дэлхийг хамгаалагч хамгийн хүчирхэг Саяа дайчин. Анхны нэрийг нь Какарот гэдэг.",
+      "trivia": "Гокугийн дууг оруулсан жүжигчин Масако Нозава нь өдгөө 80 гаруй настай бөгөөд Гокугийн дүрд 30 гаруй жил тасралтгүй дуу оруулж байна!"
+    },
+    {
+      "id": 5,
+      "character_image": "https://images.unsplash.com/photo-1563089145-599997674d42?w=600&auto=format&fit=crop&q=80",
+      "emojis": "🕶️🤞👁️⚪",
+      "answer": "Satoru Gojo",
+      "options": ["Yuji Itadori", "Megumi Fushiguro", "Satoru Gojo", "Suguru Geto"],
+      "answers": ["gojo", "satoru gojo", "гожо", "сатору гожо"],
+      "video": "https://www.youtube.com/embed/v8b3YrokKxg",
+      "hint": "Жужуцу сургуулийн хамгийн хүчирхэг багш, цагаан үстэй, хязгааргүй орон зайг удирдагч агуу шидтэн.",
+      "trivia": "Гожо Саторугийн нүд маш үзэсгэлэнтэй цэнхэр өнгөтэй бөгөөд үүнийг дүрслэхийн тулд анимэйшн студи нь онцгой эффект, гэрэлтүүлэг ашигладаг."
+    },
+    {
+      "id": 6,
+      "character_image": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=600&auto=format&fit=crop&q=80",
+      "emojis": "🎋🎀👘👹",
+      "answer": "Nezuko Kamado",
+      "options": ["Nezuko Kamado", "Kanao Tsuyuri", "Shinobu Kocho", "Mitsuri Kanroji"],
+      "answers": ["nezuko", "nezuko kamado", "нэзүко", "камадо нэзүко", "незуко"],
+      "video": "https://www.youtube.com/embed/2e_TnyE0S_E",
+      "hint": "Танжирогийн хайрт дүү, амандаа хулс зуусан, нарны гэрлээс айдаг ч хүчирхэг чөтгөр охин.",
+      "trivia": "Нэзүкогийн амандаа зуудаг хулс нь түүнийг хүн рүү дайрч, хүний цус амсахаас сэргийлж, чөтгөрийн инстинктийг нь барьж байдаг Томиока Гиюгийн хийж өгсөн хамгаалалт юм."
+    },
+    {
+      "id": 7,
+      "character_image": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&auto=format&fit=crop&q=80",
+      "emojis": "🧣⚔️👣🩸",
+      "answer": "Eren Yeager",
+      "options": ["Armin Arlert", "Mikasa Ackerman", "Levi Ackerman", "Eren Yeager"],
+      "answers": ["eren", "eren yeager", "эрен", "эрен йегэр", "эрен егер"],
+      "video": "https://www.youtube.com/embed/8OkpRKvshSg",
+      "hint": "Attack on Titan цувралын гол дүр. 'Эрх чөлөө'-ний төлөө дэлхийг ч устгахад бэлэн дайчин аварга титан.",
+      "trivia": "Эрен гэдэг нэр нь турк хэлээр 'ариун хүн' эсвэл 'мэргэн хүн', харин Йегэр гэдэг нь герман хэлээр 'ангууч' гэсэн утгатай."
+    },
+    {
+      "id": 8,
+      "character_image": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&auto=format&fit=crop&q=80",
+      "emojis": "☕🧹⚔️🧥",
+      "answer": "Levi Ackerman",
+      "options": ["Eren Yeager", "Levi Ackerman", "Erwin Smith", "Reiner Braun"],
+      "answers": ["levi", "levi ackerman", "леви", "ливай", "ахмад леви", "captain levi"],
+      "video": "https://www.youtube.com/embed/8OkpRKvshSg",
+      "hint": "Хүн төрөлхтний хамгийн хүчирхэг цэрэг, Цэвэрлэгээ хийх дуртай, Survey Corps-ийн тасгийн дарга.",
+      "trivia": "Леви ахмад цай уух маш дуртай бөгөөд аяганы бариулаас баривал бариул нь салж магадгүй гэж айсандаа байнга аяганы амсраас нь барьж уудаг хачин зуршилтай."
+    },
+    {
+      "id": 9,
+      "character_image": "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
+      "emojis": "🐕⚡😷👁️",
+      "answer": "Kakashi Hatake",
+      "options": ["Naruto Uzumaki", "Kakashi Hatake", "Obito Uchiha", "Minato Namikaze"],
+      "answers": ["kakashi", "kakashi hatake", "какаши", "хатакэ какаши"],
+      "video": "https://www.youtube.com/embed/2u3X9G8r3no",
+      "hint": "Хуулагч Нинжа нэрээрээ алдартай, байнга ном уншиж маск зүүдэг, Нарутогийн багш.",
+      "trivia": "Какашигийн нэр япон хэлээр 'Хүн шувуу' буюу тариалангийн талбайд шувуу үргээхээр зоодог зүйл гэсэн утгатай."
+    },
+    {
+      "id": 10,
+      "character_image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80",
+      "emojis": "⚡👨‍🦲🥋🔴",
+      "answer": "Saitama",
+      "options": ["Genos", "Saitama", "Garou", "Mumen Rider"],
+      "answers": ["saitama", "one punch man", "сайтама", "нэг цохилтын хүн"],
+      "video": "https://www.youtube.com/embed/faqmNMCK29s",
+      "hint": "Ямар ч дайсныг ганцхан цохилтоор ялдаг, үсгүй болсон хамгийн хүчирхэг баатар.",
+      "trivia": "Сайтамагийн дүр төрх болон улаан шар хувцас нь Японы хүүхдийн алдартай супер баатар 'Анпанман'-аас сэдэвлэгдсэн байдаг."
+    },
+    {
+      "id": 11,
+      "character_image": "https://images.unsplash.com/photo-1614036417651-efe5912149d8?w=600&auto=format&fit=crop&q=80",
+      "emojis": "☕🎭🩸👁️",
+      "answer": "Ken Kaneki",
+      "options": ["Ken Kaneki", "Touka Kirishima", "Shidou Kaneki", "Amon Koutarou"],
+      "answers": ["kaneki", "ken kaneki", "канеки", "кэн канеки", "канеки кэн"],
+      "video": "https://www.youtube.com/embed/7aMOurgDB-o",
+      "hint": "Tokyo Ghoul цувралын гол дүр бөгөөд эрхтэн шилжүүлэн суулгуулснаар хагас гүүл болж хувирсан цагаан үстэй залуу.",
+      "trivia": "Канекигийн цагаан үс нь түүнийг тарчлаан зовоосон Yamori-ийн хүнд дарамтаас үүдсэн Сэргэлийн синдром (Marie Antoinette syndrome) юм."
+    },
+    {
+      "id": 12,
+      "character_image": "https://images.unsplash.com/photo-1614036417651-efe5912149d8?w=600&auto=format&fit=crop&q=80",
+      "emojis": "🦾⚡🔴👦",
+      "answer": "Edward Elric",
+      "options": ["Alphonse Elric", "Edward Elric", "Roy Mustang", "Riza Hawkeye"],
+      "answers": ["edward", "edward elric", "эдвард", "эдвард элрик", "эд"],
+      "video": "https://www.youtube.com/embed/X59yPeVk_70",
+      "hint": "Fullmetal Alchemist цувралын гол дүр, баруун гар болон зүүн хөл нь төмөр (Automail) бөгөөд намхан нуруутайдаа маш мэдрэг алхимич залуу.",
+      "trivia": "Эдвард бол түүхэн дэх хамгийн залуу Улсын Алхимич (State Alchemist) болсон хүн бөгөөд түүнд 'Fullmetal' хэмээх цолыг Ерөнхийлөгч өөрөө өгсөн."
+    },
+    {
+      "id": 13,
+      "character_image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80",
+      "emojis": "⚡🛹🍫🛹",
+      "answer": "Killua Zoldyck",
+      "options": ["Gon Freecss", "Killua Zoldyck", "Kurapika", "Leorio"],
+      "answers": ["killua", "killua zoldyck", "киллуа", "килуа", "киллуа золдик"],
+      "video": "https://www.youtube.com/embed/faqmNMCK29s",
+      "hint": "Hunter x Hunter цувралын дүр, алдартай алуурчны гэр бүлээс гаралтай, цахилгаан хүч ашигладаг, шоколаданд нугасгүй Гон-ий хамгийн сайн найз.",
+      "trivia": "Киллуа маш их чихэрлэг зүйлд дуртай бөгөөд аялалын үеэр бараг 200 сая гаруй женни-г зөвхөн шоколадан бөмбөлөгт зарцуулж байсан!"
+    },
+    {
+      "id": 14,
+      "character_image": "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
+      "emojis": "👘💀⚔️🍊",
+      "answer": "Ichigo Kurosaki",
+      "options": ["Ichigo Kurosaki", "Uryu Ishida", "Renji Abarai", "Sosuke Aizen"],
+      "answers": ["ichigo", "ichigo kurosaki", "ичего", "ичиго", "ичиго куросаки"],
+      "video": "https://www.youtube.com/embed/o3p7p_OPh38",
+      "hint": "Bleach цувралын гол дүр, сүнсний элч (Shinigami)-ийн хүчийг авч, дэлхий болон сүнсний ертөнцийг хамгаалдаг улбар шар үстэй залуу.",
+      "trivia": "Ичиго гэдэг нэр нь япон хэлээр 'Нэг хамгаалагч' эсвэл 'Гүзээлзгэнэ' гэсэн утгатай бөгөөд түүний үсний өнгө байнга хүмүүсийн анхаарлыг татдаг."
+    },
+    {
+      "id": 15,
+      "character_image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80",
+      "emojis": "⚔️🖤💻👾",
+      "answer": "Kirito",
+      "options": ["Kirito", "Asuna", "Klein", "Sinon"],
+      "answers": ["kirito", "kazuto", "кирито", "казуто", "киригая казуто"],
+      "video": "https://www.youtube.com/embed/K8YI1F6_Fp4",
+      "hint": "Sword Art Online тоглоомын ертөнцөд гацсан хар хувцаст 'Хар Хөлөг Баатар' (The Black Swordsman). Жинхэнэ нэр нь Киригая Казуто.",
+      "trivia": "Кирито тоглоом дотор хоёр сэлэм зэрэг эзэмших (Dual Blades) онцгой чадварыг ганцаараа авсан бөгөөд энэ нь түүний хамгийн хурдан хариу үйлдэл үзүүлэх чадварт суурилсан юм."
+    }
+  ]
+}

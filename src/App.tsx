@@ -14,6 +14,7 @@ import CrouchJumpDodge from './components/CrouchJumpDodge';
 import ZombieGame from './components/ZombieGame';
 import FightingGame from './components/FightingGame';
 import ReflexClicker from './components/ReflexClicker';
+import AnimeGuesser from './components/AnimeGuesser';
 
 // Import local avatar asset
 // @ts-ignore
@@ -76,11 +77,45 @@ export default function App() {
   const [secretFactFound, setSecretFactFound] = useState(false);
   const [xp, setXp] = useState(135); 
   const [scrollY, setScrollY] = useState(0);
-  const [activeBioTab, setActiveBioTab] = useState<'bio' | 'school' | 'hobbies' | 'gaming'>('bio');
+  const [activeBioTab, setActiveBioTab] = useState<'bio' | 'school' | 'hobbies' | 'gaming' | 'anime-guesser'>('bio');
   const [activeStatus, setActiveStatus] = useState('🟢 ОНЛАЙН • Сонгдог аялал хийж байна 🎮');
   const [unlockedBadges, setUnlockedBadges] = useState<string[]>(['gamer', 'pioneer']);
   const [profileClicks, setProfileClicks] = useState(0);
   const [showNotification, setShowNotification] = useState<string | null>(null);
+
+  // Custom Cursor and Spotlight follow state
+  const [mousePos, setMousePos] = useState({ x: -200, y: -200 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target && (
+          target.tagName === 'BUTTON' || 
+          target.tagName === 'A' || 
+          target.closest('button') || 
+          target.closest('a') ||
+          target.classList?.contains('cursor-pointer')
+        )
+      ) {
+        setIsHovering(true);
+      } else {
+        setIsHovering(false);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseover', handleMouseOver);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseover', handleMouseOver);
+    };
+  }, []);
 
   // Background audio / stars ambiance toggle
   const [enableAmbianceParticles, setEnableAmbianceParticles] = useState(true);
@@ -914,7 +949,8 @@ export default function App() {
                   { id: 'bio', label: '👦 Танилцуулга', icon: <User className="w-3.5 h-3.5" /> },
                   { id: 'school', label: '🎒 Сургууль', icon: <GraduationCap className="w-3.5 h-3.5" /> },
                   { id: 'hobbies', label: '🚀 Сормуус Хобби', icon: <Trophy className="w-3.5 h-3.5" /> },
-                  { id: 'gaming', label: '🎮 Тоглох Түвшин', icon: <Gamepad2 className="w-3.5 h-3.5" /> }
+                  { id: 'gaming', label: '🎮 Тоглох Түвшин', icon: <Gamepad2 className="w-3.5 h-3.5" /> },
+                  { id: 'anime-guesser', label: '🎌 Анимэ Таавар', icon: <Sparkles className="w-3.5 h-3.5 text-rose-400" /> }
                 ].map(bTab => (
                   <button
                     key={bTab.id}
@@ -1092,6 +1128,28 @@ export default function App() {
                       </div>
                     </motion.div>
                   )}
+
+                  {activeBioTab === 'anime-guesser' && (
+                    <motion.div 
+                      key="anime-guesser"
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      transition={{ duration: 0.25 }}
+                      className="space-y-4"
+                    >
+                      <div className="flex items-center gap-2 text-rose-400 font-extrabold text-lg">
+                        <Sparkles className="w-5 h-5 text-rose-400 animate-pulse" />
+                        <h4>Анимэ Таавар PRO</h4>
+                      </div>
+                      <p className="text-slate-300 text-xs leading-relaxed">
+                        Доорх сонирхолтой тааврыг тааж өөрийн Отаку мэдлэгийг сориорой! Зөв хариулбал шууд XP оноо авах болно.
+                      </p>
+                      <div className="bg-stone-900/40 p-4 rounded-2xl border border-white/5">
+                        <AnimeGuesser onGainXp={(amount, message) => triggerReward(amount, message)} />
+                      </div>
+                    </motion.div>
+                  )}
                 </AnimatePresence>
               </div>
 
@@ -1127,7 +1185,7 @@ export default function App() {
                   АСРАЛТЫН ТОГЛООМЫН САН 🕹️
                 </h3>
                 <p className="text-xs text-slate-400">
-                  Бие даан бүтээж, сонгосон 5 сонирхолтой тоглоомыг нэг дороос тоглож, XP оноогоо нэмээрэй!
+                  Бие даан бүтээж, сонгосон 6 сонирхолтой тоглоомыг нэг дороос тоглож, XP оноогоо нэмээрэй!
                 </p>
               </div>
             </div>
@@ -1141,13 +1199,14 @@ export default function App() {
           </div>
 
           {/* Game Selection Bento Horizontal bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 py-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 py-6">
             {[
               { id: 'obby', title: '🧱 Roblox 2D Obby', desc: 'Компьютерийн зөөлөн саад', color: 'hover:border-yellow-400/40 text-yellow-300' },
               { id: 'cyber', title: '🚅 Субвэй Гүйгч PRO', desc: 'Гал тэрэгнээс бултах', color: 'hover:border-pink-500/40 text-pink-400' },
               { id: 'zombie', title: '💀 CS: Zombie Outbreak', desc: 'Буудах, амь тавилт', color: 'hover:border-red-500/40 text-red-400' },
               { id: 'fighting', title: '⚔️ Сэлэмт Тулаан', desc: 'Шидэт үсрэлт, цохилт', color: 'hover:border-purple-500/40 text-purple-400' },
               { id: 'reflex', title: '🎯 CS: Кибер Аим Арена', desc: 'Зэвсэг сонгох онолт', color: 'hover:border-emerald-500/40 text-[#2ecc71]' },
+              { id: 'anime', title: '🎌 Анимэ Таавар PRO', desc: 'Эможи, зураг, видео таавар', color: 'hover:border-rose-500/40 text-rose-400' },
             ].map((game) => (
               <button
                 key={game.id}
@@ -1225,6 +1284,16 @@ export default function App() {
               </motion.div>
             )}
 
+            {activeGame === 'anime' && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full p-4">
+                <div className="flex justify-between items-center pb-3 border-b border-white/5 mb-4">
+                  <span className="text-xs text-rose-400 font-bold flex items-center gap-1">🎌 АНИМЭ ТААВАР PRO - Отаку Сорилт 🎮</span>
+                  <button onClick={() => setActiveGame(null)} className="text-[10px] text-rose-450 hover:text-rose-400 font-bold">Хаах ✕</button>
+                </div>
+                <AnimeGuesser onGainXp={(amount, message) => triggerReward(amount, message)} />
+              </motion.div>
+            )}
+
             {activeGame === null && (
               <div className="text-center p-8 space-y-4">
                 <div className="w-16 h-16 rounded-full bg-indigo-500/5 border border-indigo-400/20 flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
@@ -1233,7 +1302,7 @@ export default function App() {
                 <div className="space-y-1 max-w-sm">
                   <h4 className="text-white font-extrabold text-sm uppercase tracking-wide">Тоглохын тулд дээд хэсгээс сонгоно уу</h4>
                   <p className="text-[11.5px] text-slate-400 leading-relaxed font-sans">
-                    Мөрөөдөлдөө тэмүүлэгч Асралтын бүтээсэн эдгээр 5-н сонгодог сэдвүүд нь гар утас болон компьютер дээр зэрэг тоглох уян боломжтой.
+                    Мөрөөдөлдөө тэмүүлэгч Асралтын бүтээсэн эдгээр 6-н сонгодог сэдвүүд нь гар утас болон компьютер дээр зэрэг тоглох уян боломжтой.
                   </p>
                 </div>
               </div>
@@ -1845,6 +1914,41 @@ export default function App() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Dynamic Cursor Follow Spotlight Background */}
+      <div 
+        className="pointer-events-none fixed inset-0 z-0 transition-opacity duration-1000"
+        style={{
+          background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(99, 102, 241, 0.08), transparent 80%)`
+        }}
+      />
+
+      {/* Elegant Custom Follow Cursor Dot & Ring */}
+      <div 
+        className="pointer-events-none fixed z-[9999] hidden md:block rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]"
+        style={{
+          left: `${mousePos.x}px`,
+          top: `${mousePos.y}px`,
+          width: isHovering ? '12px' : '6px',
+          height: isHovering ? '12px' : '6px',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: isHovering ? '#f43f5e' : '#6366f1',
+          transition: 'width 0.2s, height 0.2s, background-color 0.2s'
+        }}
+      />
+      <div 
+        className="pointer-events-none fixed z-[9998] hidden md:block rounded-full border border-indigo-500/30 transition-all duration-300 ease-out"
+        style={{
+          left: `${mousePos.x}px`,
+          top: `${mousePos.y}px`,
+          width: isHovering ? '36px' : '24px',
+          height: isHovering ? '36px' : '24px',
+          transform: 'translate(-50%, -50%)',
+          borderColor: isHovering ? 'rgba(244, 63, 94, 0.5)' : 'rgba(99, 102, 241, 0.3)',
+          backgroundColor: isHovering ? 'rgba(244, 63, 94, 0.03)' : 'rgba(99, 102, 241, 0.01)',
+          boxShadow: isHovering ? '0 0 15px rgba(244, 63, 94, 0.2)' : 'none',
+        }}
+      />
 
     </div>
   );
