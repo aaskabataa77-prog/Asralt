@@ -6,7 +6,7 @@
       "answer": "One Piece",
       "options": ["One Piece", "Naruto", "Bleach", "Dragon Ball"],
       "answers": ["one piece", "onepiece", "op", "luffy", "ван пис", "луффи", "ванпис"],
-      "image": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSTGlhA-uS8ADY055p1u3k3KPr7ydc3preS1hFgHtnew&s=10",
       "video": "https://www.youtube.com/embed/S8_YwFLCh4U",
       "hint": "Энэ анимэ-ийн гол дүр резинэн биетэй бөгөөд Хөвгүүдийн Хаан болохыг мөрөөддөг.",
       "trivia": "One Piece бол дэлхийн түүхэнд хамгийн олон хувь борлогдсон манга бөгөөд 500 сая гаруй хувь борлогдож Гиннесийн дээд амжилтыг тогтоосон!"
@@ -17,7 +17,7 @@
       "answer": "Naruto",
       "options": ["Naruto", "Boruto", "My Hero Academia", "Demon Slayer"],
       "answers": ["naruto", "naruto shippuden", "наруто", "uzumaki", "узумаки", "шиппүдэн"],
-      "image": "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTu18usSMYcE6EgMYLNvFNruJXTfn64xK52JDaQDUsSGA&s=10",
       "video": "https://www.youtube.com/embed/2u3X9G8r3no",
       "hint": "Дотор нь есөн сүүлт үнэгэн чөтгөр тамгалагдсан, Рамэнд нугасгүй шар үстэй нинжа хүү.",
       "trivia": "Нарутогийн дуртай рамэн ресторан 'Ичираку Рамэн' нь зохиолч Масаши Кишимотогийн оюутан байхдаа байнга очдог байсан бодит ресторан дээр суурилсан байдаг!"
@@ -28,7 +28,7 @@
       "answer": "Demon Slayer",
       "options": ["Demon Slayer", "Jujutsu Kaisen", "Attack on Titan", "Inuyasha"],
       "answers": ["demon slayer", "kimetsu no yaiba", "kny", "demonslayer", "tanjiro", "демон слэйер", "квицу но яиба", "чөтгөрийн ангууч"],
-      "image": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0fMxjRck-hY6tdV_nW-SnIWjFEvO3SGjYc77oCHjPUg&s=10",
       "video": "https://www.youtube.com/embed/2e_TnyE0S_E",
       "hint": "Танжиро хүү хайртай дүүгээ чөтгөрөөс буцааж хүн болгохын тулд онцгой сэлэм эзэмшинэ.",
       "trivia": "Mugen Train кино нь Японы бүх цаг үеийн хамгийн өндөр орлоготой кино болж, алдарт Спиритэд Эвэй (Spirited Away) киноны 19 жилийн дээд амжилтыг эвдсэн юм!"
@@ -39,7 +39,7 @@
       "answer": "Attack on Titan",
       "options": ["Attack on Titan", "Neon Genesis Evangelion", "Death Note", "Fullmetal Alchemist"],
       "answers": ["attack on titan", "aot", "shingeki no kyojin", "snk", "титан", "эрен", "attackontitan", "титануудын дайралт"],
-      "image": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQigobSp1b1DRmp6xeC4hcycUCRnUXcP3XQTxdkHxd14w&s=10",
       "video": "https://www.youtube.com/embed/8OkpRKvshSg",
       "hint": "Хүн төрөлхтөн аварга биетүүдээс хамгаалж 3 давхар аварга том хананы ард амьдардаг.",
       "trivia": "Энэ анимэ-ийн аварга титануудын хөдөлгөөнүүдийг зохиолч Хажимэ Исаяма холимог тулааны тамирчдын (MMA) тулааны техникээс санаа авч зурсан байна."
@@ -50,7 +50,7 @@
       "answer": "Death Note",
       "options": ["Death Note", "Code Geass", "Steins;Gate", "Monster"],
       "answers": ["death note", "deathnote", "l", "light yagami", "дэт ноут", "үхлийн тэмдэглэл"],
-      "image": "https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjZbALlad69w7FYQJYCA9-dAKSF_vGW5kEdXFhF8y9Fg&s=10",
       "video": "https://www.youtube.com/embed/8QE9cmfxx4s",
       "hint": "Нэрийг нь бичсэн хүн үхдэг ер бусын дэвтэр олсон гоц ухаант сурагч болон L-ийн оюун ухааны тулаан.",
       "trivia": "Мөрдөгч L-ийг анх зохиогчид нь хэтэрхий царайлаг биш, харин маш хачин зуршилтай (суух хэлбэр, чихэр идэх г.м) өвөрмөц дүр болгож бүтээсэн байна."
@@ -61,7 +61,7 @@
       "answer": "Dragon Ball",
       "options": ["Dragon Ball", "Hunter x Hunter", "Yu Yu Hakusho", "One Punch Man"],
       "answers": ["dragon ball", "dragonball", "dbz", "goku", "драгонбол", "драгон бол", "гоку", "лууны сувд"],
-      "image": "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2ji4RyGS9NbaO4kvH66TVHs2Yjzqe_dJmt9UCn21mjQ&s=10",
       "video": "https://www.youtube.com/embed/GHnfX19Z1_U",
       "hint": "7 ширхэг шидэт бөмбөлгийг цуглуулж хүслээ биелүүлдэг, сайн төрлийн саяа уралдааны дайчин эр Сон Гоку.",
       "trivia": "Гокугийн 'Камэхамэха' довтолгооны нэр нь Хавайн арал дээрх алдартай хааны нэрнээс гаралтай!"
@@ -72,7 +72,7 @@
       "answer": "Jujutsu Kaisen",
       "options": ["Jujutsu Kaisen", "Chainsaw Man", "Bleach", "Tokyo Ghoul"],
       "answers": ["jujutsu kaisen", "jjk", "yuji", "gojo", "жужуцу кайсен", "жижүцү", "жужуцү"],
-      "image": "https://images.unsplash.com/photo-1563089145-599997674d42?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTh3hSw1X2eKkBBNgd3rEtwENN-wnk38NLfJMpUoPiNlw&s=10",
       "video": "https://www.youtube.com/embed/v8b3YrokKxg",
       "hint": "Чөтгөрийн хаан Сукунагийн хурууг залгиж, хараалын хүчийг ашиглан тэмцэх сурагч хүү Итадори.",
       "trivia": "Гүжү Гожогийн нүдний боолт нь түүний 'Хязгааргүй Зургаан Нүд' мэдрэхүйг хэт ачаалахаас сэргийлж, тархийг нь амраадаг зориулалттай!"
@@ -83,7 +83,7 @@
       "answer": "My Hero Academia",
       "options": ["My Hero Academia", "Black Clover", "Fire Force", "Soul Eater"],
       "answers": ["my hero academia", "mha", "boku no hero academia", "bnha", "миний баатарлаг академи", "деку", "deku"],
-      "image": "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ5m7Cz3MqjUYlYZAH2r2pw1M0wLlZAIZaSw_XsUDAjQ&s=10",
       "video": "https://www.youtube.com/embed/wIb3nnOeWZo",
       "hint": "Хүн бүр ер бусын хүчтэй (Quirk) төрдөг ертөнцөд хүчгүй төрсөн ч хамгийн агуу баатар болохыг зорьж буй Деку.",
       "trivia": "Декугийн баатарлаг нэр 'Deku' нь япон хэлний 'Дэкиру' буюу 'Би чадна!' гэдэг үгтэй төстэй сонсогдохоор өөрчлөгдсөн бөгөөд урьд нь 'хэрэгцээгүй хүн' гэсэн доромж үг байжээ."
@@ -94,7 +94,7 @@
       "answer": "Chainsaw Man",
       "options": ["Chainsaw Man", "Devilman Crybaby", "Hellsing", "D.Gray-man"],
       "answers": ["chainsaw man", "chainsawman", "denji", "pochita", "хөрөөт хүн", "хөрөөт", "чэйнсоу мэн"],
-      "image": "https://images.unsplash.com/photo-1613376023733-0a73315d9b06?w=600&auto=format&fit=crop&q=80",
+      "image": "https://a.storyblok.com/f/178900/1280x1708/3e6ed611e7/chainsaw-man-the-movie-reze-arc-chainsaw-man-character-visual.jpg/m/filters:quality(95)format(webp)",
       "video": "https://www.youtube.com/embed/dFlDRhvM4L0",
       "hint": "Почита хэмээх хөрөөт чөтгөр нохойтой нэгдэж, цээжнээсээ хөрөө гаргаж тулалддаг Дэньжи хүү.",
       "trivia": "Зохиолч Тацүки Фүжимото энэ бүтээлийнхээ ихэнх хэсгийг Өмнөд Солонгосын аймшгийн болон Америкийн блокбастер кинонуудаас санаа авч бүтээсэн тул олон кино уран бүтээлийн 'easter egg' орсон байдаг."
@@ -105,7 +105,7 @@
       "answer": "Hunter x Hunter",
       "options": ["Hunter x Hunter", "Yu Yu Hakusho", "Fairy Tail", "Sword Art Online"],
       "answers": ["hunter x hunter", "hxh", "gon", "killua", "хантер хантер", "ангууч", "хантер"],
-      "image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLYwY12mnQ4o2D51taXncJf2LGQ-SX4Y63cStG5aZHyA&s=10",
       "video": "https://www.youtube.com/embed/faqmNMCK29s",
       "hint": "Гон хүү аавыгаа олохын тулд Ангуучийн (Hunter) шалтанд орж, Нэн хүчийг суралцаж, маш олон аюулыг туулдаг.",
       "trivia": "Зохиолч Ёшихиро Тогаши нь алдарт Сейлор Мүүнийг (Sailor Moon) бүтээгч Наоко Такэүчитэй гэрлэсэн бөгөөд тэд бие биенийхээ манга дээр тусалж байсан!"
@@ -116,7 +116,7 @@
       "answer": "Fullmetal Alchemist",
       "options": ["Fullmetal Alchemist", "Fairy Tail", "Blue Exorcist", "D.Gray-man"],
       "answers": ["fullmetal alchemist", "fma", "fmab", "edward elric", "металл алхимич", "ган алхимич", "фуллметал"],
-      "image": "https://images.unsplash.com/photo-1614036417651-efe5912149d8?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE-9jOxwc9V_lil_WCq7JaZNjqecg-ADF-hXwO80w4kQ&s=10",
       "video": "https://www.youtube.com/embed/X59yPeVk_70",
       "hint": "Нас барсан ээжийгээ амь оруулах гээд өөрийн биеийн хэсэг болон дүүгийнхээ биеийг алдсан ах дүү алхимичид.",
       "trivia": "Fullmetal Alchemist: Brotherhood нь олон жилийн турш анимэ үнэлгээний MyAnimeList сайт дээр тасралтгүй №1 байр суурийг эзэлж ирсэн хамгийн төгс зохиолтой бүтээлүүдийн нэг юм!"
@@ -127,7 +127,7 @@
       "answer": "Tokyo Ghoul",
       "options": ["Tokyo Ghoul", "Parasyte", "Another", "Deadman Wonderland"],
       "answers": ["tokyo ghoul", "kaneki", "токио гүүл", "токио гхүүл", "гүүл", "канеки"],
-      "image": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR12GltcURdI_K4vDRqw732IvVyoqZZBBMbjHDPnyLrkg&s=10",
       "video": "https://www.youtube.com/embed/7aMOurgDB-o",
       "hint": "Хүний махаар хооллодог 'гүүл' хэмээх амьтны эрхтэн шилжүүлэн суулгуулж, хагас гүүл болсон Канеки хүү.",
       "trivia": "Канекигийн цагаан үс болон хумсаа дуугаргадаг зуршил нь маш их хэмжээний сэтгэл зүйн дарамт, тарчлаан зоволтоос үүдэлтэй Сэргэлийн синдром (Marie Antoinette syndrome) юм."
@@ -138,7 +138,7 @@
       "answer": "Sword Art Online",
       "options": ["Sword Art Online", "Log Horizon", "Overlord", "No Game No Life"],
       "answers": ["sword art online", "sao", "kirito", "сорд арт онлайн", "сэргээн засах сорд", "хөлөг баатрууд"],
-      "image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKLMyPFv2a_ZbbbLXceHiz5_Phc51t9KJNu5ydSrty2Q&s=10",
       "video": "https://www.youtube.com/embed/K8YI1F6_Fp4",
       "hint": "Виртуал тоглоомын ертөнцөд гацаж, тэндээс амьд гарахын тулд 100 давхар цайзыг давах ёстой хар хувцаст Киришима/Кирито.",
       "trivia": "SAO нь орчин үеийн Исекай (өөр ертөнцөд очих) төрлийн анимэ-г асар хүчтэй дэлгэрүүлж, олон зуун ижил төстэй бүтээл гарах үндсийг тавьсан билээ."
@@ -149,7 +149,7 @@
       "answer": "Bleach",
       "options": ["Bleach", "Naruto", "One Piece", "Soul Eater"],
       "answers": ["bleach", "ichigo", "блич", "куросаки", "ичиго"],
-      "image": "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9iqrV1UGUQtrxa7TeSuGSyjiYC7D7n8JcxzeV4-pvjw&s=10",
       "video": "https://www.youtube.com/embed/o3p7p_OPh38",
       "hint": "Сүнсний залуу элч Рукиагийн хүчийг авч, сүнснүүдийг чөлөөлдөг улбар шар үстэй Ичиго.",
       "trivia": "Зохиолч Тите Кубо энэхүү цувралаа анх 'Snipe' гэж нэрлэх гэж байсан бөгөөд баатрууд нь сэлмийн оронд буу ашигладаг байхаар төлөвлөж байжээ!"
@@ -160,7 +160,7 @@
       "answer": "Sailor Moon",
       "options": ["Sailor Moon", "Cardcaptor Sakura", "Madoka Magica", "Precure"],
       "answers": ["sailor moon", "sailormoon", "сейлор мүүн", "сейлор мун", "сарны охин"],
-      "image": "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=80",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ88HpeGy3oEYGtfMYu6vXEB3N-UGlv2fJLof6vualqFg&s=10",
       "video": "https://www.youtube.com/embed/2u3X9G8r3no",
       "hint": "Луна хэмээх ярьдаг хар мууртай учирч, Сарны хүчээр хувирч хорон муутай тэмцэх Усаги охин.",
       "trivia": "Сейлор Мүүн нь эмэгтэй супер баатруудын хэв маягийг бүрэн өөрчилж, дэлхий даяар асар том соёлын давалгаа үүсгэсэн хамгийн анхны Махо Шожо (шидэт охин) анимэ юм."
@@ -169,7 +169,7 @@
   "characters": [
     {
       "id": 1,
-      "character_image": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLNfcmEUK7IpLiY8HONLIWwO7Y3CGARkXU7LupS1N4sA&s=10",
       "emojis": "👒🍖🏴‍☠️",
       "answer": "Monkey D. Luffy",
       "options": ["Monkey D. Luffy", "Roronoa Zoro", "Portgas D. Ace", "Shanks"],
@@ -180,7 +180,7 @@
     },
     {
       "id": 2,
-      "character_image": "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTu18usSMYcE6EgMYLNvFNruJXTfn64xK52JDaQDUsSGA&s=10",
       "emojis": "🦊🍥🌀🍜",
       "answer": "Naruto Uzumaki",
       "options": ["Sasuke Uchiha", "Naruto Uzumaki", "Kakashi Hatake", "Boruto Uzumaki"],
@@ -191,7 +191,7 @@
     },
     {
       "id": 3,
-      "character_image": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRA5rvgWnV-3cxSf10IAtjqrm3_VJDkZL7sZ9fjZ2A1-A&s=10",
       "emojis": "🐗⚔️⚡👺",
       "answer": "Tanjiro Kamado",
       "options": ["Tanjiro Kamado", "Zenitsu Agatsuma", "Inosuke Hashibira", "Giyu Tomioka"],
@@ -202,7 +202,7 @@
     },
     {
       "id": 4,
-      "character_image": "https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2xcCNFMjK-JPP9AA4quxm_qKmm9zIIascXMWlbrIh0w&s=10",
       "emojis": "🐉🥋⭐🟠",
       "answer": "Goku",
       "options": ["Vegeta", "Gohan", "Goku", "Trunks"],
@@ -213,7 +213,7 @@
     },
     {
       "id": 5,
-      "character_image": "https://images.unsplash.com/photo-1563089145-599997674d42?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyt2-BE9fm9m80o-xx4dJvjeLRUFQiByYNyIcJ7CWntw&s=10",
       "emojis": "🕶️🤞👁️⚪",
       "answer": "Satoru Gojo",
       "options": ["Yuji Itadori", "Megumi Fushiguro", "Satoru Gojo", "Suguru Geto"],
@@ -224,7 +224,7 @@
     },
     {
       "id": 6,
-      "character_image": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRVtQseJODkN8DNTtGvuksGsGKeXhw_0r-y_bttN0TWA&s=10",
       "emojis": "🎋🎀👘👹",
       "answer": "Nezuko Kamado",
       "options": ["Nezuko Kamado", "Kanao Tsuyuri", "Shinobu Kocho", "Mitsuri Kanroji"],
@@ -235,7 +235,7 @@
     },
     {
       "id": 7,
-      "character_image": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLPO9b1ZIQXCjRZNSi59ud0_PnE17AFWNT1Rx61mkKCg&s=10",
       "emojis": "🧣⚔️👣🩸",
       "answer": "Eren Yeager",
       "options": ["Armin Arlert", "Mikasa Ackerman", "Levi Ackerman", "Eren Yeager"],
@@ -246,7 +246,7 @@
     },
     {
       "id": 8,
-      "character_image": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIeObUHtNaAQQbQy82eZAM_q1S5QlJBxUEIvz71Ds4Sg&s=10",
       "emojis": "☕🧹⚔️🧥",
       "answer": "Levi Ackerman",
       "options": ["Eren Yeager", "Levi Ackerman", "Erwin Smith", "Reiner Braun"],
@@ -257,7 +257,7 @@
     },
     {
       "id": 9,
-      "character_image": "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmuHLd1k4x6FLFyKHOsgHdBTFMLEps5DGJqOjWuyvXGw&s",
       "emojis": "🐕⚡😷👁️",
       "answer": "Kakashi Hatake",
       "options": ["Naruto Uzumaki", "Kakashi Hatake", "Obito Uchiha", "Minato Namikaze"],
@@ -268,7 +268,7 @@
     },
     {
       "id": 10,
-      "character_image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMTz0rcMrX6gcXSyHncVsog_ImmggaQXfg7HLZ3xTJSw&s=10",
       "emojis": "⚡👨‍🦲🥋🔴",
       "answer": "Saitama",
       "options": ["Genos", "Saitama", "Garou", "Mumen Rider"],
@@ -279,7 +279,7 @@
     },
     {
       "id": 11,
-      "character_image": "https://images.unsplash.com/photo-1614036417651-efe5912149d8?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-8W4AmlVugXpnVzwW1KBzRNP0Oq_n6D6n1YGQMomIow&s=10",
       "emojis": "☕🎭🩸👁️",
       "answer": "Ken Kaneki",
       "options": ["Ken Kaneki", "Touka Kirishima", "Shidou Kaneki", "Amon Koutarou"],
@@ -290,7 +290,7 @@
     },
     {
       "id": 12,
-      "character_image": "https://images.unsplash.com/photo-1614036417651-efe5912149d8?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTy4rmIjjCQ9-bJtYqmsD5jrktgE6yZmynVpV9wgPIW5Q&s",
       "emojis": "🦾⚡🔴👦",
       "answer": "Edward Elric",
       "options": ["Alphonse Elric", "Edward Elric", "Roy Mustang", "Riza Hawkeye"],
@@ -301,7 +301,7 @@
     },
     {
       "id": 13,
-      "character_image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG6GDTwGfHMj2M7QFbVl9y6UnfLKKcHEZJpSPKGxE_4Q&s=10",
       "emojis": "⚡🛹🍫🛹",
       "answer": "Killua Zoldyck",
       "options": ["Gon Freecss", "Killua Zoldyck", "Kurapika", "Leorio"],
@@ -312,7 +312,7 @@
     },
     {
       "id": 14,
-      "character_image": "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1KPmk25xJQBmVZzDRIeC7MDQFKvdFUosmmEGVr0bCAw&s=10",
       "emojis": "👘💀⚔️🍊",
       "answer": "Ichigo Kurosaki",
       "options": ["Ichigo Kurosaki", "Uryu Ishida", "Renji Abarai", "Sosuke Aizen"],
@@ -323,7 +323,7 @@
     },
     {
       "id": 15,
-      "character_image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80",
+      "character_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4F7qfAptLiM-Ku8pQBvKoUjhX02Jm5vIVeA-Ej4c5eg&s",
       "emojis": "⚔️🖤💻👾",
       "answer": "Kirito",
       "options": ["Kirito", "Asuna", "Klein", "Sinon"],

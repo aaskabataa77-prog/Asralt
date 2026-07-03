@@ -1199,14 +1199,13 @@ export default function App() {
           </div>
 
           {/* Game Selection Bento Horizontal bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 py-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 py-6">
             {[
               { id: 'obby', title: '🧱 Roblox 2D Obby', desc: 'Компьютерийн зөөлөн саад', color: 'hover:border-yellow-400/40 text-yellow-300' },
               { id: 'cyber', title: '🚅 Субвэй Гүйгч PRO', desc: 'Гал тэрэгнээс бултах', color: 'hover:border-pink-500/40 text-pink-400' },
               { id: 'zombie', title: '💀 CS: Zombie Outbreak', desc: 'Буудах, амь тавилт', color: 'hover:border-red-500/40 text-red-400' },
               { id: 'fighting', title: '⚔️ Сэлэмт Тулаан', desc: 'Шидэт үсрэлт, цохилт', color: 'hover:border-purple-500/40 text-purple-400' },
               { id: 'reflex', title: '🎯 CS: Кибер Аим Арена', desc: 'Зэвсэг сонгох онолт', color: 'hover:border-emerald-500/40 text-[#2ecc71]' },
-              { id: 'anime', title: '🎌 Анимэ Таавар PRO', desc: 'Эможи, зураг, видео таавар', color: 'hover:border-rose-500/40 text-rose-400' },
             ].map((game) => (
               <button
                 key={game.id}
@@ -1284,16 +1283,6 @@ export default function App() {
               </motion.div>
             )}
 
-            {activeGame === 'anime' && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full p-4">
-                <div className="flex justify-between items-center pb-3 border-b border-white/5 mb-4">
-                  <span className="text-xs text-rose-400 font-bold flex items-center gap-1">🎌 АНИМЭ ТААВАР PRO - Отаку Сорилт 🎮</span>
-                  <button onClick={() => setActiveGame(null)} className="text-[10px] text-rose-450 hover:text-rose-400 font-bold">Хаах ✕</button>
-                </div>
-                <AnimeGuesser onGainXp={(amount, message) => triggerReward(amount, message)} />
-              </motion.div>
-            )}
-
             {activeGame === null && (
               <div className="text-center p-8 space-y-4">
                 <div className="w-16 h-16 rounded-full bg-indigo-500/5 border border-indigo-400/20 flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
@@ -1302,7 +1291,7 @@ export default function App() {
                 <div className="space-y-1 max-w-sm">
                   <h4 className="text-white font-extrabold text-sm uppercase tracking-wide">Тоглохын тулд дээд хэсгээс сонгоно уу</h4>
                   <p className="text-[11.5px] text-slate-400 leading-relaxed font-sans">
-                    Мөрөөдөлдөө тэмүүлэгч Асралтын бүтээсэн эдгээр 6-н сонгодог сэдвүүд нь гар утас болон компьютер дээр зэрэг тоглох уян боломжтой.
+                    Мөрөөдөлдөө тэмүүлэгч Асралтын бүтээсэн эдгээр 5-н сонгодог сэдвүүд нь гар утас болон компьютер дээр зэрэг тоглох уян боломжтой.
                   </p>
                 </div>
               </div>
@@ -1310,6 +1299,42 @@ export default function App() {
 
           </div>
 
+        </div>
+      </section>
+
+      {/* 🎌 STANDALONE ANIME GUESS (АНИМЭ ТААВАР PRO) DEDICATED SECTION 🎌 */}
+      <section id="anime-guess-section" className="relative z-10 max-w-6xl mx-auto px-4 py-8">
+        <div className="bg-gradient-to-b from-[#1c0d24] via-[#0d0717] to-[#04020a] border-2 border-rose-500/20 rounded-3.5xl p-6 md:p-8 shadow-3xl relative overflow-hidden">
+          {/* Neon gradient background glow */}
+          <div className="absolute top-0 left-1/4 w-80 h-80 bg-rose-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-purple-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row items-center justify-between pb-6 border-b border-white/10 gap-4 mb-6">
+            <div className="flex items-center gap-3.5 text-center md:text-left">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-500 via-purple-600 to-indigo-600 flex items-center justify-center text-2xl shadow-xl shadow-rose-950/40 text-white shrink-0">
+                🎌
+              </div>
+              <div>
+                <h3 className="text-xl md:text-2xl font-black bg-gradient-to-r from-rose-300 via-amber-200 to-purple-300 bg-clip-text text-transparent tracking-tight">
+                  🎌 ANIME GUESS (АНИМЭ ТААВАР PRO)
+                </h3>
+                <p className="text-xs text-slate-400">
+                  Эможины кодыг тайлах эсвэл хамгийн алдартай баатруудыг тааж өөрийн Отаку цолыг хамгаалаарай!
+                </p>
+              </div>
+            </div>
+            
+            <div className="bg-rose-500/10 border border-rose-500/20 px-4 py-2 rounded-2xl flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+              <span className="text-[11px] font-bold text-rose-300 uppercase tracking-wider">ОНЦЛОХ ТУСДАА ТОГЛООМ 🔥</span>
+            </div>
+          </div>
+
+          {/* Mount the full AnimeGuesser component standalone */}
+          <div className="bg-[#05030c] border border-white/5 rounded-2.5xl p-4 md:p-6 shadow-2xl relative">
+            <AnimeGuesser onGainXp={(amount, message) => triggerReward(amount, message)} />
+          </div>
         </div>
       </section>
 

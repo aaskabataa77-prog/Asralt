@@ -13,8 +13,16 @@ import {
   Play,
   CheckCircle,
   XCircle,
-  BookOpen
+  BookOpen,
+  Crown,
+  Award,
+  User,
+  ChevronRight,
+  ChevronLeft
 } from 'lucide-react';
+import { collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from 'firebase/firestore';
+import { db } from '../lib/firebase';
+
 
 interface Question {
   id: number;
@@ -65,6 +73,27 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
   // Fever mode triggers
   const [isFeverMode, setIsFeverMode] = useState<boolean>(false);
 
+  // User answers log tracking
+  const [userAnswers, setUserAnswers] = useState<Array<{
+    question: string;
+    userAnswer: string;
+    correctAnswer: string;
+    isCorrect: boolean;
+  }>>([]);
+
+  // Leaderboard states
+  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const [loadingLeaderboard, setLoadingLeaderboard] = useState<boolean>(false);
+  const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
+
+  // Score submission states
+  const [playerName, setPlayerName] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [showQuitConfirm, setShowQuitConfirm] = useState<boolean>(false);
+
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load questions from data.json
@@ -83,20 +112,69 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
       });
   }, []);
 
+  // Fetch TOP 10 high scores from Firestore
+  const fetchLeaderboard = async () => {
+    setLoadingLeaderboard(true);
+    try {
+      const q = query(
+        collection(db, 'scores'), 
+        orderBy('score', 'desc'), 
+        limit(10)
+      );
+      const querySnapshot = await getDocs(q);
+      const scoresList: any[] = [];
+      querySnapshot.forEach((doc) => {
+        scoresList.push({ id: doc.id, ...doc.data() });
+      });
+      setLeaderboard(scoresList);
+    } catch (error) {
+      console.error("Error fetching leaderboard:", error);
+    } finally {
+      setLoadingLeaderboard(false);
+    }
+  };
+
+  // Submit high score to Firestore
+  const handleSubmitScore = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!playerName.trim() || isSubmitting || isSubmitted) return;
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      await addDoc(collection(db, 'scores'), {
+        name: playerName.trim(),
+        score: score,
+        mode: quizMode === 'anime' ? 'Анимэ таах' : 'Баатрын дүр таах',
+        difficulty: difficulty === 'easy' ? 'Хялбар' : difficulty === 'normal' ? 'Дундаж' : 'Отаку',
+        answers: userAnswers,
+        timestamp: serverTimestamp()
+      });
+      setIsSubmitted(true);
+      playSound('victory');
+      // Refresh leaderboard list after successful submit
+      await fetchLeaderboard();
+    } catch (err: any) {
+      console.error("Error saving score to Firestore:", err);
+      setSubmitError("Оноо хадгалахад алдаа гарлаа. Дахин оролдоно уу.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   // Timer countdown hook
   useEffect(() => {
-    if (gameState === 'playing' && timeLeft > 0) {
+    if (gameState === 'playing' && timeLeft > 0 && !showQuitConfirm) {
       timerRef.current = setTimeout(() => {
         setTimeLeft(prev => prev - 1);
       }, 1000);
-    } else if (timeLeft === 0 && gameState === 'playing' && !hasAnswered) {
+    } else if (timeLeft === 0 && gameState === 'playing' && !hasAnswered && !showQuitConfirm) {
       handleTimeOut();
     }
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [timeLeft, gameState, hasAnswered]);
+  }, [timeLeft, gameState, hasAnswered, showQuitConfirm]);
 
   // Sound effects generator via Web Audio API
   const playSound = (type: 'ding' | 'buzz' | 'streak' | 'gameover' | 'victory' | 'fever') => {
@@ -220,8 +298,13 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
 
     // Choose appropriate questions list based on selected mode
     const selectedList = quizMode === 'anime' ? allQuestionsData.anime : allQuestionsData.characters;
-    // Shuffle list to make gameplay dynamic and fun
-    const shuffledList = [...selectedList].sort(() => 0.5 - Math.random());
+    // Shuffle list and also shuffle options of each question to make gameplay dynamic and fun
+    const shuffledList = [...selectedList]
+      .sort(() => 0.5 - Math.random())
+      .map(q => ({
+        ...q,
+        options: [...q.options].sort(() => 0.5 - Math.random())
+      }));
     setQuestions(shuffledList);
 
     setScore(0);
@@ -232,6 +315,10 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
     setHasAnswered(false);
     setSelectedOption(null);
     setTypedAnswer('');
+    setUserAnswers([]);
+    setIsSubmitted(false);
+    setSubmitError(null);
+    setShowQuitConfirm(false);
     
     // Reset lifelines
     setHintUsed(false);
@@ -254,6 +341,14 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
     setLives(newLives);
     setStreak(0);
     setIsFeverMode(false);
+
+    const currentQuestion = questions[currentIndex];
+    setUserAnswers(prev => [...prev, {
+      question: quizMode === 'anime' ? `${currentQuestion.emojis} (${currentQuestion.answer})` : currentQuestion.answer,
+      userAnswer: 'Хугацаа дууссан ⏰',
+      correctAnswer: currentQuestion.answer,
+      isCorrect: false
+    }]);
 
     setTimeout(() => {
       setGameState('revealed');
@@ -322,6 +417,14 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
 
     setHasAnswered(true);
     setIsCorrect(correct);
+
+    // Save user answer to log
+    setUserAnswers(prev => [...prev, {
+      question: quizMode === 'anime' ? `${currentQuestion.emojis} (${currentQuestion.answer})` : currentQuestion.answer,
+      userAnswer: userAnswer,
+      correctAnswer: currentQuestion.answer,
+      isCorrect: correct
+    }]);
 
     if (correct) {
       playSound('ding');
@@ -433,9 +536,9 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
   const currentQuestion = questions[currentIndex];
 
   return (
-    <div className={`w-full text-slate-200 transition-all duration-500 rounded-3xl ${isFeverMode ? 'bg-gradient-to-b from-[#180505] to-[#080310] shadow-[0_0_40px_rgba(239,68,68,0.15)] border border-red-500/20' : ''}`}>
+    <div className={`relative w-full text-slate-200 transition-all duration-500 rounded-3xl ${isFeverMode ? 'bg-gradient-to-b from-[#180505] to-[#080310] shadow-[0_0_40px_rgba(239,68,68,0.15)] border border-red-500/20' : ''}`}>
       {/* Sound Toggle Control & Current Mode display */}
-      <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+      <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2">
         <div className="flex items-center gap-1.5 bg-stone-950/75 border border-white/5 py-1 px-2.5 rounded-full">
           <Volume2 className={`w-3.5 h-3.5 ${soundEnabled ? 'text-indigo-400' : 'text-slate-500'}`} />
           <button 
@@ -445,7 +548,7 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
             {soundEnabled ? "Дуутай" : "Дуугүй"}
           </button>
         </div>
-        {gameState === 'playing' && (
+        {(gameState === 'playing' || gameState === 'revealed') && (
           <div className={`py-1 px-2.5 rounded-full text-[9px] uppercase font-black border tracking-wider ${
             difficulty === 'easy' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' :
             difficulty === 'normal' ? 'bg-amber-500/10 border-amber-500/20 text-amber-400' :
@@ -454,7 +557,54 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
             {difficulty === 'easy' ? "Хялбар" : difficulty === 'normal' ? "Дундаж" : "Отаку (Хэцүү)"}
           </div>
         )}
+        {(gameState === 'playing' || gameState === 'revealed') && (
+          <button
+            onClick={() => setShowQuitConfirm(true)}
+            className="flex items-center gap-1 bg-rose-500/10 hover:bg-rose-500/25 border border-rose-500/20 py-1 px-2.5 rounded-full text-[9.5px] uppercase font-black tracking-wider text-rose-400 transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95 duration-150"
+          >
+            ✕ Гарах
+          </button>
+        )}
       </div>
+
+      {/* Custom Quit Confirmation Overlay Dialog */}
+      {showQuitConfirm && (
+        <div className="absolute inset-0 bg-stone-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 rounded-3xl">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="bg-[#0e0c1b] border-2 border-rose-500/30 rounded-2.5xl p-6 text-center max-w-sm w-full space-y-5 shadow-[0_0_50px_rgba(244,63,94,0.15)]"
+          >
+            <div className="w-14 h-14 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-3xl mx-auto animate-pulse">
+              ⚠️
+            </div>
+            <div className="space-y-1.5">
+              <h3 className="text-sm font-black text-white uppercase tracking-wider">Тоглоомоос гарах уу?</h3>
+              <p className="text-[11.5px] text-slate-400 leading-relaxed font-sans">
+                Таны одоогийн цуглуулсан <span className="text-amber-400 font-bold">{score} оноо</span> хадгалагдахгүй бөгөөд тоглоом цуцлагдахыг анхаарна уу.
+              </p>
+            </div>
+            
+            <div className="flex gap-2.5 pt-1">
+              <button
+                onClick={() => {
+                  setShowQuitConfirm(false);
+                  setGameState('start');
+                }}
+                className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white font-extrabold text-[11px] uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-rose-950/20"
+              >
+                Тийм, Гарах
+              </button>
+              <button
+                onClick={() => setShowQuitConfirm(false)}
+                className="flex-1 py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/15 border border-white/5 text-slate-300 font-extrabold text-[11px] uppercase tracking-wider transition-all cursor-pointer"
+              >
+                Үргэлжлүүлэх
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       <AnimatePresence mode="wait">
         {gameState === 'start' && (
@@ -465,121 +615,207 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
             exit={{ opacity: 0, y: -15 }}
             className="p-6 text-center max-w-md mx-auto space-y-6"
           >
-            <div className="space-y-2">
-              <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-rose-500 via-amber-500 to-red-500 flex items-center justify-center text-4xl mx-auto shadow-2xl shadow-indigo-950/50 relative overflow-hidden group">
-                <div className="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                🎌
+            {!showLeaderboard ? (
+              <>
+                <div className="space-y-2">
+                  <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-rose-500 via-amber-500 to-red-500 flex items-center justify-center text-4xl mx-auto shadow-2xl shadow-indigo-950/50 relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    🎌
+                  </div>
+                  <h2 className="text-xl font-black bg-gradient-to-r from-red-400 via-amber-300 to-rose-300 bg-clip-text text-transparent uppercase tracking-tight pt-2">
+                    Анимэ Таавар PRO
+                  </h2>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Эможиноос бүрдсэн кодыг тайлах эсвэл хайртай баатруудынхаа зургийг харж таагаарай!
+                  </p>
+                </div>
+
+                {/* Quiz Mode Selector */}
+                <div className="space-y-2 text-left">
+                  <label className="text-[10px] font-black uppercase text-indigo-400 tracking-wider">Тоглоомын Горим сонгох:</label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => {
+                        setQuizMode('anime');
+                        if (allQuestionsData) setQuestions(allQuestionsData.anime);
+                      }}
+                      className={`py-3 px-2 rounded-xl text-[11px] font-black uppercase tracking-wider border transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
+                        quizMode === 'anime' 
+                          ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300 shadow-[0_0_15px_rgba(99,102,241,0.25)]' 
+                          : 'bg-[#090714] border-white/5 text-slate-400 hover:border-white/10'
+                      }`}
+                    >
+                      <span>📺 Анимэ таах</span>
+                      <span className="text-[8px] font-medium text-slate-500 lowercase">Эможи кодоор таах</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setQuizMode('character');
+                        if (allQuestionsData) setQuestions(allQuestionsData.characters);
+                      }}
+                      className={`py-3 px-2 rounded-xl text-[11px] font-black uppercase tracking-wider border transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
+                        quizMode === 'character' 
+                          ? 'bg-purple-500/20 border-purple-500 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.25)]' 
+                          : 'bg-[#090714] border-white/5 text-slate-400 hover:border-white/10'
+                      }`}
+                    >
+                      <span>🦸 Баатрын дүр таах</span>
+                      <span className="text-[8px] font-medium text-slate-500 lowercase">Зураг ба эможи харах</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Difficulty Selector */}
+                <div className="space-y-2 text-left">
+                  <label className="text-[10px] font-black uppercase text-indigo-400 tracking-wider">Хүндрэлийн Түвшин сонгох:</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      onClick={() => setDifficulty('easy')}
+                      className={`py-3 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all cursor-pointer ${
+                        difficulty === 'easy' 
+                          ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.25)]' 
+                          : 'bg-[#090714] border-white/5 text-slate-400 hover:border-white/10'
+                      }`}
+                    >
+                      🟢 Хялбар
+                      <span className="block text-[8px] font-medium text-slate-500 lowercase pt-0.5">4 сонголттой, 20с</span>
+                    </button>
+                    <button
+                      onClick={() => setDifficulty('normal')}
+                      className={`py-3 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all cursor-pointer ${
+                        difficulty === 'normal' 
+                          ? 'bg-amber-500/20 border-amber-500 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.25)]' 
+                          : 'bg-[#090714] border-white/5 text-slate-400 hover:border-white/10'
+                      }`}
+                    >
+                      🟡 Дундаж
+                      <span className="block text-[8px] font-medium text-slate-500 lowercase pt-0.5">4 сонголттой, 12с</span>
+                    </button>
+                    <button
+                      onClick={() => setDifficulty('hard')}
+                      className={`py-3 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all cursor-pointer ${
+                        difficulty === 'hard' 
+                          ? 'bg-rose-500/20 border-rose-500 text-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.25)]' 
+                          : 'bg-[#090714] border-white/5 text-slate-400 hover:border-white/10'
+                      }`}
+                    >
+                      🔥 Отаку
+                      <span className="block text-[8px] font-medium text-slate-500 lowercase pt-0.5">Сонголтгүй, 15с</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Game Rules Sheet */}
+                <div className="bg-[#0b0a16] border border-white/5 rounded-2xl p-4 text-left space-y-2.5">
+                  <h4 className="text-[11px] font-black uppercase text-indigo-400 tracking-wider flex items-center gap-1.5">
+                    <BookOpen className="w-3.5 h-3.5" /> Тоглоомын дүрэм ба шинэ боломж:
+                  </h4>
+                  <ul className="space-y-1.5 text-[11px] text-slate-300 font-medium">
+                    <li className="flex items-start gap-2">
+                      <span className="text-amber-400">✔️</span> 
+                      <span>Зөв хариулбал <strong className="text-white">+10 оноо</strong> авна.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-amber-400">✔️</span> 
+                      <span>Дараалж <strong className="text-red-400">3 зөв</strong> хариулбал <strong className="text-red-400">🔥 FEVER MODE</strong> идэвхжиж оноо <strong className="text-red-400">2 дахин</strong> үржигдэнэ!</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-amber-400">✔️</span> 
+                      <span>Хэцүү үедээ <strong className="text-indigo-400">Lifelines (Тусламж)</strong> ашиглаж болно. Гэхдээ тусламж бүр <strong className="text-rose-400">-3 онооны</strong> өртөгтэй!</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Dual grid action buttons: Start Game & Leaderboard */}
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                  <button
+                    onClick={startGame}
+                    className="py-3.5 px-3 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-extrabold text-xs uppercase tracking-wider shadow-lg transform active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <Play className="w-4 h-4 fill-white" /> Тоглоомыг Эхлэх
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowLeaderboard(true);
+                      fetchLeaderboard();
+                    }}
+                    className="py-3.5 px-3 rounded-2xl bg-[#090714]/80 hover:bg-white/5 border border-white/10 text-amber-300 font-extrabold text-xs uppercase tracking-wider transform active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5"
+                  >
+                    🏆 Топ 10 оноо
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="text-left space-y-4">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Trophy className="w-5 h-5 text-amber-400" />
+                    <h3 className="text-sm font-black text-white uppercase tracking-wider">ТОП 10 Тоглогчийн Leaderboard</h3>
+                  </div>
+                  <button
+                    onClick={() => setShowLeaderboard(false)}
+                    className="text-xs text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-xl transition-all cursor-pointer font-bold"
+                  >
+                    Буцах ✕
+                  </button>
+                </div>
+
+                {loadingLeaderboard ? (
+                  <div className="flex flex-col items-center justify-center py-12 space-y-2">
+                    <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Ачаалж байна...</p>
+                  </div>
+                ) : leaderboard.length === 0 ? (
+                  <div className="text-center py-12 text-slate-500 text-xs font-semibold bg-stone-950/20 rounded-2xl border border-white/5">
+                    Одоогоор оноо хадгалагдаагүй байна. 🎮
+                  </div>
+                ) : (
+                  <div className="space-y-2.5 max-h-[320px] overflow-y-auto pr-1">
+                    {leaderboard.map((item, idx) => {
+                      let badge = "text-slate-400";
+                      let bgGlow = "border-white/5 bg-stone-950/60";
+                      if (idx === 0) {
+                        badge = "text-yellow-400 font-bold";
+                        bgGlow = "border-amber-500/20 bg-amber-500/5 shadow-[0_0_15px_rgba(245,158,11,0.05)]";
+                      } else if (idx === 1) {
+                        badge = "text-slate-300 font-bold";
+                        bgGlow = "border-slate-400/20 bg-slate-400/5";
+                      } else if (idx === 2) {
+                        badge = "text-amber-600 font-bold";
+                        bgGlow = "border-amber-700/20 bg-amber-700/5";
+                      }
+
+                      return (
+                        <div
+                          key={item.id || idx}
+                          className={`flex items-center justify-between p-3 rounded-2xl border hover:border-white/15 transition-all ${bgGlow}`}
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <span className={`text-xs w-6 text-center ${badge}`}>
+                              {idx === 0 ? "👑" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : idx + 1}
+                            </span>
+                            <div className="min-w-0">
+                              <span className="text-xs font-black text-white truncate block">{item.name}</span>
+                              <span className="text-[8.5px] text-slate-400 uppercase tracking-widest block font-bold mt-0.5">
+                                {item.mode} • {item.difficulty}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-xs font-black text-amber-300 block">{item.score} <span className="text-[9px] text-slate-500 lowercase font-medium">оноо</span></span>
+                            {item.timestamp && (
+                              <span className="text-[8.5px] text-slate-500 block font-semibold">
+                                {new Date(item.timestamp.seconds * 1000).toLocaleDateString()}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-              <h2 className="text-xl font-black bg-gradient-to-r from-red-400 via-amber-300 to-rose-300 bg-clip-text text-transparent uppercase tracking-tight pt-2">
-                Анимэ Таавар PRO
-              </h2>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Эможиноос бүрдсэн кодыг тайлах эсвэл хайртай баатруудынхаа зургийг харж таагаарай!
-              </p>
-            </div>
-
-            {/* Quiz Mode Selector */}
-            <div className="space-y-2 text-left">
-              <label className="text-[10px] font-black uppercase text-indigo-400 tracking-wider">Тоглоомын Горим сонгох:</label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => {
-                    setQuizMode('anime');
-                    if (allQuestionsData) setQuestions(allQuestionsData.anime);
-                  }}
-                  className={`py-3 px-2 rounded-xl text-[11px] font-black uppercase tracking-wider border transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
-                    quizMode === 'anime' 
-                      ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300 shadow-[0_0_15px_rgba(99,102,241,0.25)]' 
-                      : 'bg-[#090714] border-white/5 text-slate-400 hover:border-white/10'
-                  }`}
-                >
-                  <span>📺 Анимэ таах</span>
-                  <span className="text-[8px] font-medium text-slate-500 lowercase">Эможи кодоор таах</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setQuizMode('character');
-                    if (allQuestionsData) setQuestions(allQuestionsData.characters);
-                  }}
-                  className={`py-3 px-2 rounded-xl text-[11px] font-black uppercase tracking-wider border transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
-                    quizMode === 'character' 
-                      ? 'bg-purple-500/20 border-purple-500 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.25)]' 
-                      : 'bg-[#090714] border-white/5 text-slate-400 hover:border-white/10'
-                  }`}
-                >
-                  <span>🦸 Баатрын дүр таах</span>
-                  <span className="text-[8px] font-medium text-slate-500 lowercase">Зураг ба эможи харах</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Difficulty Selector */}
-            <div className="space-y-2 text-left">
-              <label className="text-[10px] font-black uppercase text-indigo-400 tracking-wider">Хүндрэлийн Түвшин сонгох:</label>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  onClick={() => setDifficulty('easy')}
-                  className={`py-3 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all cursor-pointer ${
-                    difficulty === 'easy' 
-                      ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.25)]' 
-                      : 'bg-[#090714] border-white/5 text-slate-400 hover:border-white/10'
-                  }`}
-                >
-                  🟢 Хялбар
-                  <span className="block text-[8px] font-medium text-slate-500 lowercase pt-0.5">4 сонголттой, 20с</span>
-                </button>
-                <button
-                  onClick={() => setDifficulty('normal')}
-                  className={`py-3 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all cursor-pointer ${
-                    difficulty === 'normal' 
-                      ? 'bg-amber-500/20 border-amber-500 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.25)]' 
-                      : 'bg-[#090714] border-white/5 text-slate-400 hover:border-white/10'
-                  }`}
-                >
-                  🟡 Дундаж
-                  <span className="block text-[8px] font-medium text-slate-500 lowercase pt-0.5">4 сонголттой, 12с</span>
-                </button>
-                <button
-                  onClick={() => setDifficulty('hard')}
-                  className={`py-3 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider border transition-all cursor-pointer ${
-                    difficulty === 'hard' 
-                      ? 'bg-rose-500/20 border-rose-500 text-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.25)]' 
-                      : 'bg-[#090714] border-white/5 text-slate-400 hover:border-white/10'
-                  }`}
-                >
-                  🔥 Отаку
-                  <span className="block text-[8px] font-medium text-slate-500 lowercase pt-0.5">Сонголтгүй, 15с</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Game Rules Sheet */}
-            <div className="bg-[#0b0a16] border border-white/5 rounded-2xl p-4 text-left space-y-2.5">
-              <h4 className="text-[11px] font-black uppercase text-indigo-400 tracking-wider flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5" /> Тоглоомын дүрэм ба шинэ боломж:
-              </h4>
-              <ul className="space-y-1.5 text-[11px] text-slate-300 font-medium">
-                <li className="flex items-start gap-2">
-                  <span className="text-amber-400">✔️</span> 
-                  <span>Зөв хариулбал <strong className="text-white">+10 оноо</strong> авна.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-amber-400">✔️</span> 
-                  <span>Дараалж <strong className="text-red-400">3 зөв</strong> хариулбал <strong className="text-red-400">🔥 FEVER MODE</strong> идэвхжиж оноо <strong className="text-red-400">2 дахин</strong> үржигдэнэ!</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-amber-400">✔️</span> 
-                  <span>Хэцүү үедээ <strong className="text-indigo-400">Lifelines (Тусламж)</strong> ашиглаж болно. Гэхдээ тусламж бүр <strong className="text-rose-400">-3 онооны</strong> өртөгтэй!</span>
-                </li>
-              </ul>
-            </div>
-
-            <button
-              onClick={startGame}
-              className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-extrabold text-xs uppercase tracking-wider shadow-lg shadow-indigo-950/50 hover:shadow-indigo-900/50 transform active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2"
-            >
-              <Play className="w-4 h-4 fill-white" /> Тоглоомыг Эхлэх
-            </button>
+            )}
           </motion.div>
         )}
 
@@ -685,12 +921,39 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
                     alt="Аниме Баатар" 
                     className={`w-full h-full object-cover transition-all duration-700 ${
                       hasAnswered 
-                        ? 'blur-none opacity-100 scale-105' 
-                        : 'blur-md opacity-35 scale-100'
+                        ? 'blur-none opacity-100 scale-100' 
+                        : 'blur-[3px] opacity-75 scale-100'
                     }`}
                     referrerPolicy="no-referrer"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent"></div>
+                  {!hasAnswered && <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent"></div>}
+                </motion.div>
+              )}
+
+              {quizMode === 'anime' && currentQuestion.image && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="relative w-48 h-28 md:w-56 md:h-32 rounded-2xl overflow-hidden border border-white/10 shadow-lg z-10 bg-[#090714]"
+                >
+                  <img 
+                    src={currentQuestion.image} 
+                    alt="Анимэ сэжүүр зураг" 
+                    className={`w-full h-full object-cover transition-all duration-700 ${
+                      hasAnswered 
+                        ? 'blur-none opacity-100 scale-100' 
+                        : 'blur-[4px] opacity-75 brightness-95 scale-100'
+                    }`}
+                    referrerPolicy="no-referrer"
+                  />
+                  {!hasAnswered && <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>}
+                  {!hasAnswered && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-[8.5px] bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-full text-indigo-300 border border-indigo-500/30 font-black uppercase tracking-wider">
+                        🔒 Будгарсан зураг
+                      </span>
+                    </div>
+                  )}
                 </motion.div>
               )}
 
@@ -921,10 +1184,10 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
                 <img 
                   src={currentQuestion.image || currentQuestion.character_image} 
                   alt={currentQuestion.answer}
-                  className="w-full h-full object-cover filter brightness-[0.75] contrast-[1.1]"
+                  className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0b0a16] via-[#0b0a16]/40 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0b0a16] via-transparent to-transparent"></div>
                 <div className="absolute bottom-3 left-4">
                   <span className="text-[10px] uppercase font-black text-indigo-400 tracking-wider">
                     {quizMode === 'anime' ? "Нээгдсэн анимэ" : "Нээгдсэн баатар"}
@@ -986,7 +1249,7 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="p-6 text-center max-w-sm mx-auto space-y-5"
+            className="p-6 text-center max-w-md mx-auto space-y-5"
           >
             <div className="space-y-1">
               <div className="w-16 h-16 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-4xl mx-auto animate-bounce">
@@ -1008,6 +1271,63 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
                 <span className="text-base font-black text-indigo-400">{currentIndex + 1} / {questions.length}</span>
               </div>
             </div>
+
+            {/* Score Submit Form */}
+            <div className="bg-[#0b0a16] border border-indigo-500/20 rounded-2xl p-4 text-left space-y-3 relative z-10">
+              <h4 className="text-[11px] font-black uppercase text-indigo-400 tracking-wider flex items-center gap-1.5">
+                <Award className="w-4 h-4 text-amber-400" /> Оноогоо хадгалах:
+              </h4>
+              {!isSubmitted ? (
+                <form onSubmit={handleSubmitScore} className="space-y-2">
+                  <p className="text-[10px] text-slate-400">Өөрийн нэрийг оруулж Leaderboard-д өрсөлдөөрэй!</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      required
+                      value={playerName}
+                      onChange={(e) => setPlayerName(e.target.value)}
+                      placeholder="Тоглогчийн нэр..."
+                      className="flex-1 py-2 px-3 rounded-xl bg-stone-950 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                    />
+                    <button
+                      type="submit"
+                      disabled={isSubmitting || !playerName.trim()}
+                      className="py-2 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 text-white text-xs font-bold transition-all cursor-pointer"
+                    >
+                      {isSubmitting ? "Хадгалж байна..." : "Илгээх"}
+                    </button>
+                  </div>
+                  {submitError && (
+                    <p className="text-[9px] text-rose-400 font-bold">{submitError}</p>
+                  )}
+                </form>
+              ) : (
+                <div className="bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-xl text-center space-y-1">
+                  <p className="text-xs font-black text-emerald-400">Таны амжилт амжилттай хадгалагдлаа! 🎉</p>
+                  <p className="text-[10px] text-indigo-300 font-bold">Онооны самбараас өөрийн байрыг хараарай.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Answer Log Review */}
+            {userAnswers.length > 0 && (
+              <div className="bg-[#0b0a16] border border-white/5 rounded-2xl p-4 text-left space-y-2 max-h-[160px] overflow-y-auto relative z-10">
+                <h4 className="text-[11px] font-black uppercase text-slate-400 tracking-wider">Хариултуудын Түүх:</h4>
+                <div className="space-y-1.5">
+                  {userAnswers.map((ans, i) => (
+                    <div key={i} className="flex items-center justify-between text-[11px] p-2 bg-stone-950/40 rounded-xl border border-white/5">
+                      <div className="min-w-0 pr-2">
+                        <span className="font-extrabold text-white truncate block">{ans.question}</span>
+                        <span className="text-[9px] text-slate-400">Таны хариулт: <strong className={ans.isCorrect ? "text-emerald-400" : "text-rose-400"}>{ans.userAnswer}</strong></span>
+                      </div>
+                      <span className={`text-[10px] font-black shrink-0 ${ans.isCorrect ? "text-emerald-400" : "text-rose-400"}`}>
+                        {ans.isCorrect ? "✓ ЗӨВ" : "✗ БУРУУ"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <button
               onClick={startGame}
@@ -1051,6 +1371,63 @@ export default function AnimeGuesser({ onGainXp }: AnimeGuesserProps) {
                 <span className="text-base font-black text-indigo-400">+50 XP</span>
               </div>
             </div>
+
+            {/* Score Submit Form */}
+            <div className="bg-[#0b0a16] border border-indigo-500/20 rounded-2xl p-4 text-left space-y-3 relative z-10">
+              <h4 className="text-[11px] font-black uppercase text-indigo-400 tracking-wider flex items-center gap-1.5">
+                <Award className="w-4 h-4 text-amber-400" /> Оноогоо хадгалах:
+              </h4>
+              {!isSubmitted ? (
+                <form onSubmit={handleSubmitScore} className="space-y-2">
+                  <p className="text-[10px] text-slate-400">Өөрийн нэрийг оруулж Leaderboard-д өрсөлдөөрэй!</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      required
+                      value={playerName}
+                      onChange={(e) => setPlayerName(e.target.value)}
+                      placeholder="Тоглогчийн нэр..."
+                      className="flex-1 py-2 px-3 rounded-xl bg-stone-950 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                    />
+                    <button
+                      type="submit"
+                      disabled={isSubmitting || !playerName.trim()}
+                      className="py-2 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 text-white text-xs font-bold transition-all cursor-pointer"
+                    >
+                      {isSubmitting ? "Хадгалж байна..." : "Илгээх"}
+                    </button>
+                  </div>
+                  {submitError && (
+                    <p className="text-[9px] text-rose-400 font-bold">{submitError}</p>
+                  )}
+                </form>
+              ) : (
+                <div className="bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-xl text-center space-y-1">
+                  <p className="text-xs font-black text-emerald-400">Таны амжилт амжилттай хадгалагдлаа! 🎉</p>
+                  <p className="text-[10px] text-indigo-300 font-bold">Онооны самбараас өөрийн байрыг хараарай.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Answer Log Review */}
+            {userAnswers.length > 0 && (
+              <div className="bg-[#0b0a16] border border-white/5 rounded-2xl p-4 text-left space-y-2 max-h-[160px] overflow-y-auto relative z-10">
+                <h4 className="text-[11px] font-black uppercase text-slate-400 tracking-wider">Хариултуудын Түүх:</h4>
+                <div className="space-y-1.5">
+                  {userAnswers.map((ans, i) => (
+                    <div key={i} className="flex items-center justify-between text-[11px] p-2 bg-stone-950/40 rounded-xl border border-white/5">
+                      <div className="min-w-0 pr-2">
+                        <span className="font-extrabold text-white truncate block">{ans.question}</span>
+                        <span className="text-[9px] text-slate-400">Таны хариулт: <strong className={ans.isCorrect ? "text-emerald-400" : "text-rose-400"}>{ans.userAnswer}</strong></span>
+                      </div>
+                      <span className={`text-[10px] font-black shrink-0 ${ans.isCorrect ? "text-emerald-400" : "text-rose-400"}`}>
+                        {ans.isCorrect ? "✓ ЗӨВ" : "✗ БУРУУ"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <button
               onClick={startGame}
