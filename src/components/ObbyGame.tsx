@@ -881,7 +881,7 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
         });
 
         // Falling off the screen bounds / into the abyss (Бүх үеүдэд доошоо унахад шууд үхдэг болгов)
-        if (player.y > 465) {
+        if (player.y > 425) {
           handleDie();
           return;
         }
