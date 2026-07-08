@@ -1185,7 +1185,7 @@ export default function App() {
                   АСРАЛТЫН ТОГЛООМЫН САН 🕹️
                 </h3>
                 <p className="text-xs text-slate-400">
-                  Бие даан бүтээж, сонгосон 6 сонирхолтой тоглоомыг нэг дороос тоглож, XP оноогоо нэмээрэй!
+                  Бие даан бүтээж, сонгосон 7 сонирхолтой тоглоомыг нэг дороос тоглож, XP оноогоо нэмээрэй!
                 </p>
               </div>
             </div>
@@ -1199,7 +1199,7 @@ export default function App() {
           </div>
 
           {/* Game Selection Bento Horizontal bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 py-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 py-6">
             {[
               { id: 'obby', title: '🧱 Roblox 2D Obby', desc: 'Компьютерийн зөөлөн саад', color: 'hover:border-yellow-400/40 text-yellow-300' },
               { id: 'cyber', title: '🚅 Субвэй Гүйгч PRO', desc: 'Гал тэрэгнээс бултах', color: 'hover:border-pink-500/40 text-pink-400' },
@@ -1207,6 +1207,7 @@ export default function App() {
               { id: 'fighting', title: '⚔️ Сэлэмт Тулаан', desc: 'Шидэт үсрэлт, цохилт', color: 'hover:border-purple-500/40 text-purple-400' },
               { id: 'reflex', title: '🎯 CS: Кибер Аим Арена', desc: 'Зэвсэг сонгох онолт', color: 'hover:border-emerald-500/40 text-[#2ecc71]' },
               { id: 'anime', title: '🎌 Анимэ Таавар PRO', desc: 'Эможи, зураг, видео таавар', color: 'hover:border-rose-500/40 text-rose-400' },
+              { id: 'partner_game', title: '🚀 Сансрын Ертөнц', desc: 'Асралтын шинэ апп сорилт', color: 'hover:border-cyan-500/40 text-cyan-400 animate-pulse' },
             ].map((game) => (
               <button
                 key={game.id}
@@ -1294,6 +1295,40 @@ export default function App() {
               </motion.div>
             )}
 
+            {activeGame === 'partner_game' && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full p-4 flex flex-col h-full">
+                <div className="flex justify-between items-center pb-3 border-b border-white/5 mb-4">
+                  <span className="text-xs text-cyan-400 font-bold flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-spin" /> АСРАЛТЫН САНСРЫН ЕРТӨНЦ 🚀
+                  </span>
+                  <div className="flex items-center gap-3">
+                    <a 
+                      href="https://ai.studio/apps/bf6e2f4a-0734-42c2-8a00-931d59f68111" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-[10px] bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 px-2.5 py-1 rounded-lg border border-cyan-500/20 font-bold transition-all flex items-center gap-1 hover:scale-105 active:scale-95 duration-150"
+                    >
+                      Шинэ цонхонд нээх ↗
+                    </a>
+                    <button onClick={() => setActiveGame(null)} className="text-[10px] text-rose-450 hover:text-rose-400 font-bold px-1">Хаах ✕</button>
+                  </div>
+                </div>
+                <div className="text-[11px] text-slate-400 mb-3 bg-cyan-950/20 border border-cyan-500/10 px-3 py-2 rounded-xl flex items-center gap-2">
+                  <span>💡</span>
+                  <span>Хэрэв тоглоом харагдахгүй эсвэл ачааллахгүй байвал баруун дээд талын <strong>"Шинэ цонхонд нээх ↗"</strong> товчийг дарж шууд тоглоорой!</span>
+                </div>
+                <div className="w-full h-[620px] bg-stone-950/40 rounded-2xl border border-white/5 overflow-hidden shadow-2xl relative">
+                  <iframe 
+                    src="https://ai.studio/apps/bf6e2f4a-0734-42c2-8a00-931d59f68111" 
+                    className="w-full h-full border-0 rounded-2xl bg-stone-950"
+                    title="Asralt's Space App"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; camera; microphone; geolocation"
+                    allowFullScreen
+                  />
+                </div>
+              </motion.div>
+            )}
+
             {activeGame === null && (
               <div className="text-center p-8 space-y-4">
                 <div className="w-16 h-16 rounded-full bg-indigo-500/5 border border-indigo-400/20 flex items-center justify-center text-4xl mx-auto shadow-inner animate-bounce">
@@ -1302,7 +1337,7 @@ export default function App() {
                 <div className="space-y-1 max-w-sm">
                   <h4 className="text-white font-extrabold text-sm uppercase tracking-wide">Тоглохын тулд дээд хэсгээс сонгоно уу</h4>
                   <p className="text-[11.5px] text-slate-400 leading-relaxed font-sans">
-                    Мөрөөдөлдөө тэмүүлэгч Асралтын бүтээсэн эдгээр 6-н сонгодог сэдвүүд нь гар утас болон компьютер дээр зэрэг тоглох уян боломжтой.
+                    Мөрөөдөлдөө тэмүүлэгч Асралтын бүтээсэн эдгээр 7-н сонгодог сэдвүүд нь гар утас болон компьютер дээр зэрэг тоглох уян боломжтой.
                   </p>
                 </div>
               </div>
