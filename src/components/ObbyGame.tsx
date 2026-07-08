@@ -451,6 +451,7 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
   const [mute, setMute] = useState(false);
   const [unlockedLevels, setUnlockedLevels] = useState<number[]>([0]);
   const [checkpointCoords, setCheckpointCoords] = useState<{ x: number, y: number } | null>(null);
+  const checkpointCoordsRef = useRef<{ x: number, y: number } | null>(null);
   const [showWinMessage, setShowWinMessage] = useState(false);
 
   // Game Object Properties
@@ -476,6 +477,8 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
     shirtColor: '#ef4444',
     particles: [] as Array<{ x: number, y: number, vx: number, vy: number, color: string, size: number, alpha: number }>
   });
+
+  const deathFreezeFrames = useRef(0);
 
   // Controls map
   const keysRef = useRef<Record<string, boolean>>({});
@@ -527,6 +530,7 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
     
     // reset level checkpoint
     setCheckpointCoords(null);
+    checkpointCoordsRef.current = null;
     lvl.blocks.forEach((b: LevelBlock) => {
       if (b.type === 'checkpoint') {
         b.activated = false;
@@ -664,202 +668,223 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
         }
       });
 
-      // ----------------------------------------------------
-      // 2. APPLY CONTROLS & PHYSICS
-      // ----------------------------------------------------
-      const acceleration = 0.42;
-      const friction = 0.82;
-      let targetVx = 0;
-      if (keysRef.current['left'] || keysRef.current['a']) {
-        targetVx = -player.speed;
-        player.facingRight = false;
-      }
-      if (keysRef.current['right'] || keysRef.current['d']) {
-        targetVx = player.speed;
-        player.facingRight = true;
-      }
-
-      // Smooth horizontal velocity transitioning
-      if (targetVx !== 0) {
-        player.vx += (targetVx - player.vx) * acceleration;
-        
-        // Spawn slide/running dust particles on blocks
-        if (player.isGrounded && Math.random() < 0.35) {
-          player.particles.push({
-            x: player.x + player.w / 2 + (Math.random() - 0.5) * player.w,
-            y: player.y + player.h,
-            vx: -player.vx * 0.15 + (Math.random() - 0.5) * 0.5,
-            vy: (Math.random() - 0.5) * 0.3 - 0.4,
-            color: 'rgba(255, 255, 255, 0.45)',
-            size: Math.random() * 2 + 1,
-            alpha: 0.7
-          });
-        }
-      } else {
-        player.vx *= friction;
-        if (Math.abs(player.vx) < 0.15) {
-          player.vx = 0;
-        }
-      }
-
-      // Vertical gravity
-      player.vy += gravity;
-
-      // Trigger Jump & Double Jump
-      if (keysRef.current['jump']) {
-        if (player.isGrounded) {
-          player.vy = -player.jumpForce;
-          player.isGrounded = false;
-          player.jumpsLeft = 1;
-          keysRef.current['jump'] = false; // consume jump state
-          sound.playJump();
-
-          // Spawn neat initial jump blast particles
-          for (let pi = 0; pi < 10; pi++) {
-            player.particles.push({
-              x: player.x + player.w / 2 + (Math.random() - 0.5) * player.w,
-              y: player.y + player.h,
-              vx: (Math.random() - 0.5) * 2.5,
-              vy: (Math.random() - 0.5) * 1.5 - 0.5,
-              color: '#38bdf8',
-              size: Math.random() * 3 + 1,
-              alpha: 0.9
-            });
-          }
-        } else if (player.jumpsLeft > 0) {
-          // Double jump triggered! Give they a neat double jump lift
-          player.vy = -player.jumpForce * 1.1;
-          player.jumpsLeft = 0; // consume remaining jump
-          keysRef.current['jump'] = false; // consume jump state
-          sound.playJump();
-
-          // Spawn majestic golden double jump bursts fields!
-          for (let pi = 0; pi < 15; pi++) {
-            player.particles.push({
-              x: player.x + player.w / 2 + (Math.random() - 0.5) * player.w,
-              y: player.y + player.h / 2,
-              vx: (Math.random() - 0.5) * 3,
-              vy: (Math.random() - 0.5) * 3,
-              color: '#facc15', // Gold burst
-              size: Math.random() * 3.5 + 1.5,
-              alpha: 0.95
-            });
-          }
-        } else {
-          keysRef.current['jump'] = false; // consume in vain
-        }
-      }
-
-      // Check speed modification state reset (diminishes back to initial speed)
-      if (player.speed > initialSpeed) {
-        player.speed -= 0.02;
-      }
-
       // Calculate dynamic level bounds depending on blocks
       const levelWidth = lvl.blocks.reduce((max, b) => Math.max(max, b.x + b.w), 900) + 200;
 
-      // Update projected positions separately for crisp AABB collision checks
-      // AABB Horizontal Test
-      player.x += player.vx;
-      
-      // Screen/level edge constraints
-      if (player.x < 0) player.x = 0;
-      if (player.x + player.w > levelWidth) player.x = levelWidth - player.w;
-
-      // Platform Collisions (Horizontal)
-      lvl.blocks.forEach(b => {
-        // Disappearing invisible blocks cannot block the player!
-        if (b.type === 'disappearing' && b.opacity !== undefined && b.opacity < 0.2) {
-          return;
+      // ----------------------------------------------------
+      // 2. APPLY CONTROLS & PHYSICS
+      // ----------------------------------------------------
+      if (deathFreezeFrames.current > 0) {
+        deathFreezeFrames.current--;
+        
+        // When freeze ends, actually teleport the player to spawn / checkpoint
+        if (deathFreezeFrames.current === 0) {
+          const p = playerRef.current;
+          const cp = checkpointCoordsRef.current;
+          if (cp) {
+            p.x = cp.x - p.w / 2;
+            p.y = cp.y - p.h;
+          } else {
+            p.x = lvl.startX;
+            p.y = lvl.startY;
+          }
+          p.vx = 0;
+          p.vy = 0;
+        }
+      } else {
+        const acceleration = 0.42;
+        const friction = 0.82;
+        let targetVx = 0;
+        if (keysRef.current['left'] || keysRef.current['a']) {
+          targetVx = -player.speed;
+          player.facingRight = false;
+        }
+        if (keysRef.current['right'] || keysRef.current['d']) {
+          targetVx = player.speed;
+          player.facingRight = true;
         }
 
-        if (
-          player.x < b.x + b.w &&
-          player.x + player.w > b.x &&
-          player.y < b.y + b.h &&
-          player.y + player.h > b.y
-        ) {
-          // Collision occurred! Push player back
-          if (b.type === 'lava') {
-            handleDie();
+        // Smooth horizontal velocity transitioning
+        if (targetVx !== 0) {
+          player.vx += (targetVx - player.vx) * acceleration;
+          
+          // Spawn slide/running dust particles on blocks
+          if (player.isGrounded && Math.random() < 0.35) {
+            player.particles.push({
+              x: player.x + player.w / 2 + (Math.random() - 0.5) * player.w,
+              y: player.y + player.h,
+              vx: -player.vx * 0.15 + (Math.random() - 0.5) * 0.5,
+              vy: (Math.random() - 0.5) * 0.3 - 0.4,
+              color: 'rgba(255, 255, 255, 0.45)',
+              size: Math.random() * 2 + 1,
+              alpha: 0.7
+            });
+          }
+        } else {
+          player.vx *= friction;
+          if (Math.abs(player.vx) < 0.15) {
+            player.vx = 0;
+          }
+        }
+
+        // Vertical gravity
+        player.vy += gravity;
+
+        // Trigger Jump & Double Jump
+        if (keysRef.current['jump']) {
+          if (player.isGrounded) {
+            player.vy = -player.jumpForce;
+            player.isGrounded = false;
+            player.jumpsLeft = 1;
+            keysRef.current['jump'] = false; // consume jump state
+            sound.playJump();
+
+            // Spawn neat initial jump blast particles
+            for (let pi = 0; pi < 10; pi++) {
+              player.particles.push({
+                x: player.x + player.w / 2 + (Math.random() - 0.5) * player.w,
+                y: player.y + player.h,
+                vx: (Math.random() - 0.5) * 2.5,
+                vy: (Math.random() - 0.5) * 1.5 - 0.5,
+                color: '#38bdf8',
+                size: Math.random() * 3 + 1,
+                alpha: 0.9
+              });
+            }
+          } else if (player.jumpsLeft > 0) {
+            // Double jump triggered! Give they a neat double jump lift
+            player.vy = -player.jumpForce * 1.1;
+            player.jumpsLeft = 0; // consume remaining jump
+            keysRef.current['jump'] = false; // consume jump state
+            sound.playJump();
+
+            // Spawn majestic golden double jump bursts fields!
+            for (let pi = 0; pi < 15; pi++) {
+              player.particles.push({
+                x: player.x + player.w / 2 + (Math.random() - 0.5) * player.w,
+                y: player.y + player.h / 2,
+                vx: (Math.random() - 0.5) * 3,
+                vy: (Math.random() - 0.5) * 3,
+                color: '#facc15', // Gold burst
+                size: Math.random() * 3.5 + 1.5,
+                alpha: 0.95
+              });
+            }
+          } else {
+            keysRef.current['jump'] = false; // consume in vain
+          }
+        }
+
+        // Check speed modification state reset (diminishes back to initial speed)
+        if (player.speed > initialSpeed) {
+          player.speed -= 0.02;
+        }
+
+        // Update projected positions separately for crisp AABB collision checks
+        // AABB Horizontal Test
+        player.x += player.vx;
+        
+        // Screen/level edge constraints
+        if (player.x < 0) player.x = 0;
+        if (player.x + player.w > levelWidth) player.x = levelWidth - player.w;
+
+        // Platform Collisions (Horizontal)
+        lvl.blocks.forEach(b => {
+          // Disappearing invisible blocks cannot block the player!
+          if (b.type === 'disappearing' && b.opacity !== undefined && b.opacity < 0.2) {
             return;
           }
 
-          if (player.vx > 0) {
-            player.x = b.x - player.w;
-          } else if (player.vx < 0) {
-            player.x = b.x + b.w;
-          }
-        }
-      });
-
-      // AABB Vertical Test
-      player.y += player.vy;
-      player.isGrounded = false; // pessimistic default
-
-      // Platform Collisions (Vertical)
-      lvl.blocks.forEach(b => {
-        // Disappearing check
-        if (b.type === 'disappearing' && b.opacity !== undefined && b.opacity < 0.2) {
-          return;
-        }
-
-        if (
-          player.x < b.x + b.w &&
-          player.x + player.w > b.x &&
-          player.y < b.y + b.h &&
-          player.y + player.h > b.y
-        ) {
-          if (b.type === 'lava') {
-            handleDie();
-            return;
-          }
-
-          if (b.type === 'winPad') {
-            handleLevelWin();
-            return;
-          }
-
-          if (b.type === 'checkpoint' && !b.activated) {
-            b.activated = true;
-            b.color = '#10b981'; // Bright Green when activated
-            setCheckpointCoords({ x: b.x + b.w / 2, y: b.y - 10 });
-            sound.playCheckpoint();
-            setScore(prev => prev + 50);
-            if (onGainXp) onGainXp(30);
-          }
-
-          // Colliding downwards or upwards
-          if (player.vy > 0) {
-            // Landing on top of block
-            player.y = b.y - player.h;
-            player.vy = 0;
-            player.isGrounded = true;
-            player.jumpsLeft = 2; // reset double jump!
-
-            // Trigger specials
-            if (b.type === 'jumpPad') {
-              player.vy = -player.jumpForce * 1.6; // mega spring bounce
-              player.isGrounded = false;
-              player.jumpsLeft = 1; // allow one double jump in air
-              sound.playJump();
+          if (
+            player.x < b.x + b.w &&
+            player.x + player.w > b.x &&
+            player.y < b.y + b.h &&
+            player.y + player.h > b.y
+          ) {
+            // Collision occurred! Push player back
+            if (b.type === 'lava') {
+              handleDie();
+              return;
             }
 
-            if (b.type === 'speedBoost') {
-              player.speed = initialSpeed * 2.2; // heavy boost forward
+            if (player.vx > 0) {
+              player.x = b.x - player.w;
+            } else if (player.vx < 0) {
+              player.x = b.x + b.w;
             }
-          } else if (player.vy < 0) {
-            // Hitting ceiling
-            player.y = b.y + b.h;
-            player.vy = 0;
           }
-        }
-      });
+        });
 
-      // Falling off the screen bounds (unanguut shuud uhdeg bolgov)
-      if (player.y > canvas.height - player.h - 5) {
-        handleDie();
-        return;
+        // AABB Vertical Test
+        player.y += player.vy;
+        player.isGrounded = false; // pessimistic default
+
+        // Platform Collisions (Vertical)
+        lvl.blocks.forEach(b => {
+          // Disappearing check
+          if (b.type === 'disappearing' && b.opacity !== undefined && b.opacity < 0.2) {
+            return;
+          }
+
+          if (
+            player.x < b.x + b.w &&
+            player.x + player.w > b.x &&
+            player.y < b.y + b.h &&
+            player.y + player.h > b.y
+          ) {
+            if (b.type === 'lava') {
+              handleDie();
+              return;
+            }
+
+            if (b.type === 'winPad') {
+              handleLevelWin();
+              return;
+            }
+
+            if (b.type === 'checkpoint' && !b.activated) {
+              b.activated = true;
+              b.color = '#10b981'; // Bright Green when activated
+              const coords = { x: b.x + b.w / 2, y: b.y - 10 };
+              setCheckpointCoords(coords);
+              checkpointCoordsRef.current = coords;
+              sound.playCheckpoint();
+              setScore(prev => prev + 50);
+              if (onGainXp) onGainXp(30);
+            }
+
+            // Colliding downwards or upwards
+            if (player.vy > 0) {
+              // Landing on top of block
+              player.y = b.y - player.h;
+              player.vy = 0;
+              player.isGrounded = true;
+              player.jumpsLeft = 2; // reset double jump!
+
+              // Trigger specials
+              if (b.type === 'jumpPad') {
+                player.vy = -player.jumpForce * 1.6; // mega spring bounce
+                player.isGrounded = false;
+                player.jumpsLeft = 1; // allow one double jump in air
+                sound.playJump();
+              }
+
+              if (b.type === 'speedBoost') {
+                player.speed = initialSpeed * 2.2; // heavy boost forward
+              }
+            } else if (player.vy < 0) {
+              // Hitting ceiling
+              player.y = b.y + b.h;
+              player.vy = 0;
+            }
+          }
+        });
+
+        // Falling off the screen bounds / into the abyss (Бүх үеүдэд доошоо унахад шууд үхдэг болгов)
+        if (player.y > 465) {
+          handleDie();
+          return;
+        }
       }
 
       // Coin pickups collision detection
@@ -1083,6 +1108,27 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
       ctx.font = 'bold 15px system-ui';
       ctx.fillText(`${lvl.name}`, 15, 25);
 
+      // Red full-screen death flash overlay & YOU DIED message
+      if (deathFreezeFrames.current > 0) {
+        ctx.fillStyle = `rgba(220, 38, 38, ${Math.min(0.65, deathFreezeFrames.current / 15)})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.save();
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = '#ef4444';
+        ctx.shadowBlur = 15;
+        ctx.font = 'bold 32px system-ui, -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('УНАЖ ҮХЛЭЭ! ☠️', canvas.width / 2, canvas.height / 2 - 10);
+        
+        ctx.font = 'bold 13px monospace';
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+        ctx.fillText('ТҮР ХҮЛЭЭНЭ ҮҮ...', canvas.width / 2, canvas.height / 2 + 35);
+        ctx.restore();
+      }
+
       animId = requestAnimationFrame(gameLoop);
     };
 
@@ -1092,21 +1138,30 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
 
   // Fatal impact reset
   const handleDie = () => {
+    if (deathFreezeFrames.current > 0) return; // Prevent multiple consecutive deaths
+    
     sound.playDeath();
     setDeaths(d => d + 1);
     
     const player = playerRef.current;
-    if (checkpointCoords) {
-      player.x = checkpointCoords.x - player.w / 2;
-      player.y = checkpointCoords.y - player.h;
-    } else {
-      const lvl = lastStateRef.current[levelIdx];
-      player.x = lvl.startX;
-      player.y = lvl.startY;
-    }
     
+    // Spawn red & orange majestic death explosion particles!
+    for (let pi = 0; pi < 25; pi++) {
+      player.particles.push({
+        x: player.x + player.w / 2,
+        y: player.y + player.h / 2,
+        vx: (Math.random() - 0.5) * 6,
+        vy: (Math.random() - 0.5) * 6 - 2,
+        color: Math.random() < 0.5 ? '#ef4444' : '#f97316',
+        size: Math.random() * 4 + 2.5,
+        alpha: 1.0
+      });
+    }
+
+    // Freeze player in place briefly for death feedback
     player.vx = 0;
     player.vy = 0;
+    deathFreezeFrames.current = 28; // ~0.45s freeze
   };
 
   // Winning and transition mechanisms

@@ -423,10 +423,10 @@ export default function ReflexClicker({ onGainXp }: ReflexClickerProps) {
       else if (rand < 0.20) isBomb = true; // 8% cyber-bombs targets
     }
 
-    // Reaction timers
-    const levelModifier = Math.min(1800, s.score * 1.2);
-    const baseLifeTime = mode === 'speed_grid' ? 1400 : 2500;
-    const calculatedLife = Math.max(650, baseLifeTime - levelModifier);
+    // Reaction timers - Made easier (longer lifetime)
+    const levelModifier = Math.min(1800, s.score * 0.9);
+    const baseLifeTime = mode === 'speed_grid' ? 2000 : 3500;
+    const calculatedLife = Math.max(900, baseLifeTime - levelModifier);
 
     const newTarget: AimTarget = {
       id: s.nextTargetId++,
@@ -605,22 +605,10 @@ export default function ReflexClicker({ onGainXp }: ReflexClickerProps) {
 
     lastShotTimeRef.current = now;
 
-    // Check ammo
-    if (stateRef.current.ammo <= 0) {
-      audioSynth.playDryClick();
-      triggerReload();
-      return;
-    }
-
-    // Fire weapon! Decrease ammo
-    setAmmo(a => {
-      const next = a - 1;
-      if (next <= 0) {
-        setTimeout(() => triggerReload(), 100);
-      }
-      return next;
-    });
-    stateRef.current.ammo--;
+    // Check ammo - Unlimited ammo mode (sumgui)
+    // No ammo checks or decrements, keep state at maximum!
+    setAmmo(currentWeapon.maxAmmo);
+    stateRef.current.ammo = currentWeapon.maxAmmo;
 
     audioSynth.playShot(currentWeapon.sound);
 
@@ -653,14 +641,17 @@ export default function ReflexClicker({ onGainXp }: ReflexClickerProps) {
 
     let isHit = false;
     let hitIdx = -1;
-    const allowedRadiusPct = 6.8;
 
-    // Find first collision
+    // Find first collision using precise pixel distance and generous hit radius padding (joohon amarhan bolgo)
     for (let i = stateRef.current.targets.length - 1; i >= 0; i--) {
       const tgt = stateRef.current.targets[i];
-      const dist = Math.sqrt(Math.pow(tgt.x - pctX, 2) + Math.pow(tgt.y - pctY, 2));
+      const trgX = (tgt.x / 100) * rect.width;
+      const trgY = (tgt.y / 100) * rect.height;
+      const dist = Math.sqrt(Math.pow(trgX - clickX, 2) + Math.pow(trgY - clickY, 2));
 
-      if (dist <= allowedRadiusPct) {
+      // Target rendering radius in pixels is tgt.size (which grows/shrinks up to 28px).
+      // Let's add 15 pixels of generous hit margin padding, making hits incredibly easy and forgiving!
+      if (dist <= tgt.size + 15) {
         hitIdx = i;
         isHit = true;
         break;
@@ -1332,7 +1323,7 @@ export default function ReflexClicker({ onGainXp }: ReflexClickerProps) {
 
                 <div className="flex items-center gap-2">
                   <div className="text-right font-mono">
-                    <span className="font-extrabold text-lg text-white">{ammo}</span>
+                    <span className="font-extrabold text-lg text-white">∞</span>
                     <span className="text-slate-500 font-bold text-xs">/{currentWeapon.maxAmmo}</span>
                   </div>
                   

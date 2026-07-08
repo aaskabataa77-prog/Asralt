@@ -1100,7 +1100,7 @@ export default function CrouchJumpDodge({ onGainXp }: CrouchJumpDodgeProps) {
               triggerJump();
             }
           }}
-          className="w-full h-full object-cover block shadow-inner bg-[#0c0a1c] outline-none cursor-pointer"
+          className="w-full h-full object-contain block shadow-inner bg-[#0c0a1c] outline-none cursor-pointer"
         />
 
         {/* Screen Overlay: Welcome Lobby */}
