@@ -232,6 +232,12 @@ const INITIAL_WEAPONS: Weapon[] = [
 
   // SNIPER (Мэргэн буудагч)
   { id: 'awp', name: 'AWP Dragon Lore 🐉', damage: 360, fireRate: 1400, clipSize: 5, reloadTime: 2400, cost: 5500, unlocked: false, color: '#af40ff', laserColor: '#af40ff', soundType: 'awp' },
+
+  // FUTURISTIC HEAVY WEAPONS (Хэт хүчирхэг ирээдүйн зэвсгүүд)
+  { id: 'raygun', name: 'Cosmic Ray Gun 🌀', damage: 180, fireRate: 180, clipSize: 20, reloadTime: 1500, cost: 6800, unlocked: false, color: '#06b6d4', laserColor: '#22d3ee', soundType: 'pistol' },
+  { id: 'minigun', name: 'Vulcan Minigun 🔥', damage: 75, fireRate: 45, clipSize: 200, reloadTime: 4500, cost: 8500, unlocked: false, color: '#ef4444', laserColor: '#fca5a5', soundType: 'rifle' },
+  { id: 'plasma', name: 'Tesla Plasma Rifle ⚡', damage: 500, fireRate: 1000, clipSize: 10, reloadTime: 2500, cost: 9800, unlocked: false, color: '#3b82f6', laserColor: '#60a5fa', soundType: 'awp' },
+  { id: 'bfg', name: 'BFG 9000 Overlord ☄️', damage: 1200, fireRate: 2000, clipSize: 3, reloadTime: 5000, cost: 15000, unlocked: false, color: '#22c55e', laserColor: '#4ade80', soundType: 'awp' },
 ];
 
 interface ZombieGameProps {
@@ -339,9 +345,14 @@ export default function ZombieGame({ onGainXp }: ZombieGameProps) {
         keysRef.current[k] = true;
       }
       
-      // Counter Strike weapon shortcuts 1 to 8
-      if (['1', '2', '3', '4', '5', '6', '7', '8'].includes(e.key || '')) {
-        const weaponIdx = parseInt(e.key || '') - 1;
+      // Counter Strike weapon shortcuts 1 to 12 (including numeric 9, 0, -, =)
+      if (['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '='].includes(e.key || '')) {
+        let weaponIdx = -1;
+        if (e.key === '0') weaponIdx = 9;
+        else if (e.key === '-') weaponIdx = 10;
+        else if (e.key === '=') weaponIdx = 11;
+        else weaponIdx = parseInt(e.key || '') - 1;
+
         if (weapons[weaponIdx] && weapons[weaponIdx].unlocked) {
           setActiveWeaponIdx(weaponIdx);
           setCurrentClip(weapons[weaponIdx].clipSize);
@@ -484,7 +495,7 @@ export default function ZombieGame({ onGainXp }: ZombieGameProps) {
         vy: Math.sin(player.angle) * bulletSpeed,
         damage: activeWeapon.damage,
         color: activeWeapon.laserColor,
-        size: activeWeapon.soundType === 'awp' ? 6 : 4
+        size: activeWeapon.id === 'bfg' ? 14 : activeWeapon.id === 'plasma' ? 9 : activeWeapon.id === 'raygun' ? 7 : activeWeapon.soundType === 'awp' ? 6 : 4
       } as any);
 
       // Muzzle flash particles
@@ -877,13 +888,19 @@ export default function ZombieGame({ onGainXp }: ZombieGameProps) {
     ctx.arc(p.x + Math.cos(p.angle) * (p.radius + 15), p.y + Math.sin(p.angle) * (p.radius + 15), 2.5, 0, Math.PI * 2);
     ctx.fill();
 
-    // Laser Sight indicator dot line if using sniper model (AWP)
-    if (activeWeapon.id === 'awp') {
-      ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
-      ctx.lineWidth = 1;
+    // Laser Sight indicator dot line if using sniper or futuristic model
+    if (activeWeapon.id === 'awp' || activeWeapon.id === 'plasma' || activeWeapon.id === 'raygun' || activeWeapon.id === 'bfg') {
+      ctx.strokeStyle = activeWeapon.id === 'awp' 
+        ? 'rgba(239, 68, 68, 0.4)' 
+        : activeWeapon.id === 'plasma'
+          ? 'rgba(59, 130, 246, 0.4)'
+          : activeWeapon.id === 'raygun'
+            ? 'rgba(6, 182, 212, 0.4)'
+            : 'rgba(34, 197, 94, 0.4)';
+      ctx.lineWidth = activeWeapon.id === 'bfg' ? 2 : 1;
       ctx.beginPath();
       ctx.moveTo(p.x + Math.cos(p.angle) * (p.radius + 15), p.y + Math.sin(p.angle) * (p.radius + 15));
-      ctx.lineTo(p.x + Math.cos(p.angle) * 400, p.y + Math.sin(p.angle) * 400);
+      ctx.lineTo(p.x + Math.cos(p.angle) * 450, p.y + Math.sin(p.angle) * 450);
       ctx.stroke();
     }
 
@@ -917,6 +934,7 @@ export default function ZombieGame({ onGainXp }: ZombieGameProps) {
     setHealth(100);
     setMaxHealth(100);
     setWave(1);
+    window.focus();
     
     // Clear lists
     bulletsRef.current = [];
@@ -1118,8 +1136,8 @@ export default function ZombieGame({ onGainXp }: ZombieGameProps) {
             height={500}
             className="w-full h-auto cursor-crosshair bg-slate-950 block select-none touch-none"
             onMouseMove={handleMouseMove}
-            onMouseDown={handleCanvasMouseDown}
-            onTouchStart={handleTouchStart}
+            onMouseDown={(e) => { window.focus(); handleCanvasMouseDown(e); }}
+            onTouchStart={(e) => { window.focus(); handleTouchStart(e); }}
             onTouchMove={handleTouchMove}
           />
 

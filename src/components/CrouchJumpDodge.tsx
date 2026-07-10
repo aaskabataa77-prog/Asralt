@@ -366,6 +366,7 @@ export default function CrouchJumpDodge({ onGainXp }: CrouchJumpDodgeProps) {
     setGameOver(false);
     setPlaying(true);
     setPlayerAction('run');
+    window.focus();
 
     const engine = engineRef.current;
     engine.playing = true;
@@ -637,28 +638,27 @@ export default function CrouchJumpDodge({ onGainXp }: CrouchJumpDodgeProps) {
             synth.playHit();
 
             // Deduct lives
-            setLives(l => {
-              const nextLives = l - 1;
-              engine.lives = nextLives;
-              if (nextLives <= 0) {
-                // Trigger Game Over
-                setGameOver(true);
-                setPlaying(false);
-                engine.playing = false;
-                engine.gameOver = true;
+            const nextLives = engine.lives - 1;
+            engine.lives = nextLives;
+            setLives(nextLives);
 
-                // Check final high score comparison
-                const finalSc = engine.score;
-                if (finalSc > highScore) {
-                  setHighScore(finalSc);
-                  localStorage.setItem('runner_highscore', finalSc.toString());
-                  onGainXp(65); // high rewards
-                } else {
-                  onGainXp(15);
-                }
+            if (nextLives <= 0) {
+              // Trigger Game Over
+              setGameOver(true);
+              setPlaying(false);
+              engine.playing = false;
+              engine.gameOver = true;
+
+              // Check final high score comparison
+              const finalSc = engine.score;
+              if (finalSc > highScore) {
+                setHighScore(finalSc);
+                localStorage.setItem('runner_highscore', finalSc.toString());
+                onGainXp(65); // high rewards
+              } else {
+                onGainXp(15);
               }
-              return nextLives;
-            });
+            }
 
             // Flash Screen / Spark Explosion particles
             for (let sIdx = 0; sIdx < 15; sIdx++) {
@@ -1093,6 +1093,7 @@ export default function CrouchJumpDodge({ onGainXp }: CrouchJumpDodgeProps) {
           height={400}
           tabIndex={0}
           onClick={() => {
+            window.focus();
             if (canvasRef.current) {
               canvasRef.current.focus();
             }

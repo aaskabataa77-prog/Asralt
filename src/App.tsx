@@ -20,6 +20,23 @@ import AnimeGuesser from './components/AnimeGuesser';
 // @ts-ignore
 import asraltAvatar from './assets/images/asralt_avatar_1782283035872.jpg';
 
+// Import newly generated high-quality custom images for Interest items
+// @ts-ignore
+import imgBasketball from './assets/images/basketball_interest_1783660838554.jpg';
+// @ts-ignore
+import imgOnepiece from './assets/images/onepiece_interest_1783660794811.jpg';
+// @ts-ignore
+import imgGremix from './assets/images/gremix_interest_1783660747531.jpg';
+// @ts-ignore
+import imgGaming from './assets/images/gaming_interest_1783660826012.jpg';
+// @ts-ignore
+import imgFood from './assets/images/food_interest_1783660777416.jpg';
+// @ts-ignore
+import imgRokitbay from './assets/images/rokitbay_interest_1783660762349.jpg';
+// @ts-ignore
+import imgHarrypotter from './assets/images/harrypotter_interest_1783660808972.jpg';
+
+
 type ImageWithFallbackProps = {
   src: string;
   fallback: string;
@@ -348,8 +365,7 @@ export default function App() {
       gaming: 320,
       food: 112,
       rokitbay: 210,
-      movie: 168,
-      goldonthewindow: 245
+      movie: 168
     };
   });
 
@@ -374,7 +390,7 @@ export default function App() {
       category: 'hobby',
       value: 'Сагсан бөмбөг 🏀',
       description: 'Талбай дээр бөмбөгөө залж, цагираг руу довтлох мөч хамгийн гоё! Миний хамгийн дуртай супер тоглогч бол LeBron James. Түүн шиг хүчирхэг, тэвчээртэй байхыг хичээдэг.',
-      imagePath: 'licensed-image.webp',
+      imagePath: imgBasketball,
       fallbackUrl: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&auto=format&fit=crop&q=80',
       icon: <Trophy className="w-5 h-5 text-amber-400" />,
       tags: ['NBA', 'LeBron James', '3-Points'],
@@ -390,7 +406,7 @@ export default function App() {
       category: 'media',
       value: 'ONE PIECE (Ван Пис) 🏴‍☠️',
       description: 'Монки Д. Луффигийн уян налархай хүч, нөхөрлөлийн үнэ цэнэ, тэнгисийн хамгийн агуу эрдэнэсийг олох адал явдалт аялал. Энэ анимэг үзэхэд цаг хугацаа яаж өнгөрсөн нь мэдэгддэггүй!',
-      imagePath: 'images.webp',
+      imagePath: imgOnepiece,
       fallbackUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop&q=80',
       icon: <Tv className="w-5 h-5 text-rose-400" />,
       tags: ['Luffy', 'Gear 5', 'StrawHat'],
@@ -406,7 +422,7 @@ export default function App() {
       category: 'media',
       value: 'Gremix (Грэмикс) 🎬',
       description: 'Миний хамгийн дуртай монгол Юүтүбэр бол Грэмикс ах. Хөгжилтэй царайны хувирал, тоглож байгаа тоглоомууд, сонирхолтой сорилтууд нь үнэхээр инээд бэлэглэдэг!',
-      imagePath: 'images (1).webp',
+      imagePath: imgGremix,
       fallbackUrl: 'https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?w=800&auto=format&fit=crop&q=80',
       icon: <Smile className="w-5 h-5 text-yellow-400" />,
       tags: ['Хөгжилтэй', 'Challenge', 'Reacts'],
@@ -422,7 +438,7 @@ export default function App() {
       category: 'games',
       value: 'CS2 ба Roblox 🎮',
       description: 'Найзуудтайгаа онлайнаар холбогдоод Roblox дээр шинэ ертөнц нээж, харин CS2 дээр маш хурдан рефлекс, ухаалаг тактикийг ашиглан багаараа ялалт байгуулах хамгийн сэтгэл хөдөлгөм!',
-      imagePath: 'download.jpg',
+      imagePath: imgGaming,
       fallbackUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80',
       icon: <Gamepad2 className="w-5 h-5 text-sky-400" />,
       tags: ['Roblox Obby', 'CS2 Clutch', 'Mirage'],
@@ -438,7 +454,7 @@ export default function App() {
       category: 'food',
       value: 'Будаатай хуурга 🍜',
       description: 'Гэртээ хийсэн халуун будаатай хуурга бол хамгийн шилдэг нь! Амтлаг зөөлөн үхрийн мах, нарийн хэрчсэн лууван, сонгино болон амтлагчдын холимог будаатай үнэхээр сайхан зохицдог.',
-      imagePath: 'images.png',
+      imagePath: imgFood,
       fallbackUrl: 'https://images.unsplash.com/photo-1623341214825-9f4f963727da?w=800&auto=format&fit=crop&q=80',
       icon: <Utensils className="w-5 h-5 text-emerald-400" />,
       tags: ['Махтай Будаа', 'Сонгодог', 'Гэрт хийсэн'],
@@ -454,7 +470,7 @@ export default function App() {
       category: 'media',
       value: 'Rokit Bay (Рокит Бэй) 🎤',
       description: 'Түүний хэлж байгаа гүн гүнзгий үгнүүд, хип хоп реп хэмнэл маш их урам зориг өгдөг. Дуу болгон нь ямар нэг түүх өгүүлдэг болохоор дахин дахин сонсох дуртай.',
-      imagePath: 'download (1).jpg',
+      imagePath: imgRokitbay,
       fallbackUrl: 'https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=800&auto=format&fit=crop&q=80',
       icon: <Music className="w-5 h-5 text-cyan-400" />,
       tags: ['OD', 'Хязгааргүй', 'Монгол Реп'],
@@ -465,28 +481,12 @@ export default function App() {
       customDetail: "Хамгийн дуртай дуу: Ая 🌌🎵"
     },
     {
-      id: 'goldonthewindow',
-      title: 'Миний дуртай дуу',
-      category: 'media',
-      value: 'Gold on the Window 🌧️💛',
-      description: 'Бороотой цонхны неон тусгал, тайван, cozy, lofi хэмнэлтэй шилдэг уран бүтээл. Дууны үг бүр нь Асралтын сэтгэлд маш дулаахан мэдрэмж төрүүлдэг тул хамгийн дуртай дуунуудынх нь нэг болсон юм.',
-      imagePath: 'gold_on_the_window.jpg',
-      fallbackUrl: 'https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=800&auto=format&fit=crop&q=80',
-      icon: <Music className="w-5 h-5 text-amber-400" />,
-      tags: ['Cozy Lofi', 'Rainy Vibe', 'Neon Nights'],
-      statName: "Сонссон давтамж",
-      statValue: 99,
-      colorClass: "from-amber-400 to-yellow-500",
-      bgGradient: "from-amber-950/80 via-transparent to-transparent",
-      customDetail: "Шилдэг хэсэг: Vibing in my own true time 🌧️✨"
-    },
-    {
       id: 'movie',
       title: 'Дуртай кино',
       category: 'media',
       value: 'Harry Potter (Харри Поттер) 🧙‍♂️',
       description: 'Илбэ шид, ер бусын нууцуудаар дүүрэн Хогвартс сургуулийн ертөнц. Харри, Рон, Хермиона нарын нөхөрлөл бэрхшээлийг хамтдаа хэрхэн даван туулж байгаа нь үнэхээр сургамжтай.',
-      imagePath: 'download (2).jpg',
+      imagePath: imgHarrypotter,
       fallbackUrl: 'https://images.unsplash.com/photo-1505682634904-d7c8d95ccd50?w=800&auto=format&fit=crop&q=80',
       icon: <Flame className="w-5 h-5 text-fuchsia-400" />,
       tags: ['Gryffindor', 'Magic Spell', 'Fantasy'],

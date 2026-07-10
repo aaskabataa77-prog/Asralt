@@ -758,6 +758,7 @@ export default function FightingGame({ onGainXp }: FightingGameProps) {
     setScore(0);
     setGameOver(false);
     setPlaying(true);
+    window.focus();
 
     const state = loopRef.current;
     state.playing = true;
@@ -1635,11 +1636,13 @@ export default function FightingGame({ onGainXp }: FightingGameProps) {
       </div>
 
       {/* Primary Video Game Frame Canvas viewport container */}
-      <div className="relative w-full overflow-hidden bg-slate-950 flex justify-center items-center">
+      <div className="relative w-full overflow-hidden bg-slate-950 flex justify-center items-center" onClick={() => window.focus()}>
         <canvas 
           ref={canvasRef} 
           width={800} 
           height={400} 
+          onClick={() => window.focus()}
+          onMouseDown={() => window.focus()}
           className="w-full max-w-[800px] h-auto block aspect-[80/40] bg-slate-900" 
         />
 

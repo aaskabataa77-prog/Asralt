@@ -459,6 +459,7 @@ export default function ReflexClicker({ onGainXp }: ReflexClickerProps) {
     setIsReloading(false);
     isReloadingRef.current = false;
     setReloadProgress(0);
+    window.focus();
 
     const initialWeapon = WEAPONS_PRESETS[activeWeaponIdx];
     setAmmo(initialWeapon.maxAmmo);
@@ -1305,7 +1306,7 @@ export default function ReflexClicker({ onGainXp }: ReflexClickerProps) {
               width={800}
               height={400}
               className="w-full h-full block cursor-crosshair"
-              onPointerDown={(e) => handleWeaponShoot(e.clientX, e.clientY)}
+              onPointerDown={(e) => { window.focus(); handleWeaponShoot(e.clientX, e.clientY); }}
               onPointerMove={handlePointerMove}
             />
 

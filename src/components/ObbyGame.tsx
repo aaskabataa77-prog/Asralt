@@ -453,6 +453,7 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
   const [checkpointCoords, setCheckpointCoords] = useState<{ x: number, y: number } | null>(null);
   const checkpointCoordsRef = useRef<{ x: number, y: number } | null>(null);
   const [showWinMessage, setShowWinMessage] = useState(false);
+  const [avatarIndex, setAvatarIndex] = useState(0);
 
   // Game Object Properties
   const gravity = 0.5;
@@ -545,6 +546,7 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
   const handleStartGame = () => {
     setIsPlaying(true);
     loadLevel(levelIdx);
+    window.focus();
   };
 
   const resetAllStats = () => {
@@ -554,7 +556,7 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
     loadLevel(0);
   };
 
-  const handleDieRef = useRef<() => void>(() => {});
+  const handleDieRef = useRef<(forceInstant?: boolean) => void>((_f) => {});
   useEffect(() => {
     handleDieRef.current = handleDie;
   });
@@ -565,14 +567,15 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       const k = (e.key || '').toLowerCase();
+      const code = e.code;
       if (k) {
         keysRef.current[k] = true;
       }
 
-      // 'R' key to respawn/restart
-      if (k === 'r' || k === 'к') {
+      // 'R' key to respawn/restart instantly
+      if (k === 'r' || k === 'к' || code === 'KeyR') {
         e.preventDefault();
-        handleDieRef.current();
+        handleDieRef.current(true);
       }
 
       // Space or ArrowUp to Jump
@@ -690,6 +693,11 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
           }
           p.vx = 0;
           p.vy = 0;
+          p.isGrounded = false;
+          p.jumpsLeft = 2;
+          p.speed = initialSpeed;
+          p.jumpForce = initialJumpForce;
+          p.particles = [];
         }
       } else {
         const acceleration = 0.42;
@@ -1110,7 +1118,7 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
 
       // Red full-screen death flash overlay & YOU DIED message
       if (deathFreezeFrames.current > 0) {
-        ctx.fillStyle = `rgba(220, 38, 38, ${Math.min(0.65, deathFreezeFrames.current / 15)})`;
+        ctx.fillStyle = `rgba(220, 38, 38, ${Math.min(0.65, deathFreezeFrames.current / 6)})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.save();
@@ -1125,7 +1133,7 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
         ctx.font = 'bold 13px monospace';
         ctx.shadowBlur = 0;
         ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-        ctx.fillText('ТҮР ХҮЛЭЭНЭ ҮҮ...', canvas.width / 2, canvas.height / 2 + 35);
+        ctx.fillText('РЕСПАВН ХИЙЖ БАЙНА...', canvas.width / 2, canvas.height / 2 + 35);
         ctx.restore();
       }
 
@@ -1137,8 +1145,8 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
   }, [isPlaying, isGameOver, levelIdx, showWinMessage]);
 
   // Fatal impact reset
-  const handleDie = () => {
-    if (deathFreezeFrames.current > 0) return; // Prevent multiple consecutive deaths
+  const handleDie = (forceInstant = false) => {
+    if (!forceInstant && deathFreezeFrames.current > 0) return; // Prevent multiple consecutive deaths
     
     sound.playDeath();
     setDeaths(d => d + 1);
@@ -1161,7 +1169,28 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
     // Freeze player in place briefly for death feedback
     player.vx = 0;
     player.vy = 0;
-    deathFreezeFrames.current = 28; // ~0.45s freeze
+
+    if (forceInstant) {
+      const cp = checkpointCoordsRef.current;
+      const lvl = lastStateRef.current[levelIdx];
+      if (cp) {
+        player.x = cp.x - player.w / 2;
+        player.y = cp.y - player.h;
+      } else {
+        player.x = lvl.startX;
+        player.y = lvl.startY;
+      }
+      player.vx = 0;
+      player.vy = 0;
+      player.isGrounded = false;
+      player.jumpsLeft = 2;
+      player.speed = initialSpeed;
+      player.jumpForce = initialJumpForce;
+      player.particles = [];
+      deathFreezeFrames.current = 0;
+    } else {
+      deathFreezeFrames.current = 10; // ~0.16s snappy freeze
+    }
   };
 
   // Winning and transition mechanisms
@@ -1224,11 +1253,13 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
         </div>
 
         {/* INTERACTIVE CANVAS FIELD */}
-        <div className="relative border border-white/10 rounded-3xl overflow-hidden shadow-2xl bg-slate-950">
+        <div className="relative border border-white/10 rounded-3xl overflow-hidden shadow-2xl bg-slate-950" onClick={() => window.focus()}>
           <canvas
             ref={canvasRef}
             width={900}
             height={480}
+            onClick={() => window.focus()}
+            onMouseDown={() => window.focus()}
             className="w-full h-auto cursor-pointer block select-none touch-none bg-slate-950"
           />
 
@@ -1321,7 +1352,7 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
                 УДИРДЛАГЫН ЗААВАР:
               </h5>
               <p className="text-[10px] text-slate-500 leading-normal mt-0.5 max-w-sm">
-                Компьютер: <strong className="text-white">A, D, чих эсвэл Сумнууд</strong> ашиглан хөдөлнө. <strong className="text-white">W, Сум дээш, эсвэл Space</strong> товчлуураар үсэрнэ.
+                Компьютер: <strong className="text-white">A, D, чих эсвэл Сумнууд</strong> ашиглан хөдөлнө. <strong className="text-white">W, Сум дээш, эсвэл Space</strong> товчлуураар үсэрнэ. Дахин төрөх: <strong className="text-yellow-400 font-extrabold">R</strong> товчлуур.
               </p>
             </div>
 
@@ -1354,6 +1385,18 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
                   ▶
                 </button>
               </div>
+
+              {/* R Respawn Button */}
+              <button
+                onTouchStart={(e) => { e.preventDefault(); handleDie(true); }}
+                onClick={(e) => { e.preventDefault(); handleDie(true); }}
+                className="w-14 h-14 bg-red-600 hover:bg-red-500 active:bg-red-700 text-white border border-red-500/20 rounded-2xl font-black text-xs flex flex-col items-center justify-center transition-all shadow-xl cursor-pointer select-none"
+                title="Дахин Төрөх (R)"
+                style={{ touchAction: 'none' }}
+              >
+                <span className="text-sm">R</span>
+                <span className="text-[8px] font-black tracking-tight text-white/90">ТӨРӨХ</span>
+              </button>
 
               {/* Huge JUMP spring trigger button */}
               <button
@@ -1441,7 +1484,7 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
               { label: 'Gamer', shirt: '#a855f7', pants: '#eab308' },
               { label: 'Dark', shirt: '#ec4899', pants: '#171717' },
             ].map((cloth, idx) => {
-              const isSelected = playerRef.current.shirtColor === cloth.shirt;
+              const isSelected = avatarIndex === idx;
               return (
                 <button
                   key={idx}
@@ -1449,6 +1492,7 @@ export default function ObbyGame({ onGainXp }: ObbyGameProps) {
                     const player = playerRef.current;
                     player.shirtColor = cloth.shirt;
                     player.color = cloth.pants;
+                    setAvatarIndex(idx);
                     sound.playCoin();
                   }}
                   className={`relative h-11 rounded-lg border-2 flex flex-col justify-center items-center transition-all bg-slate-900 ${
